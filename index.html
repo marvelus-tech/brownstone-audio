@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Brownstone Bleeding Edge | Audio Feed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #050508;
+            --bg-secondary: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --accent: #00d4ff;
+            --accent-dim: rgba(0, 212, 255, 0.15);
+            --accent-glow: rgba(0, 212, 255, 0.3);
+            --success: #00ff88;
+            --success-dim: rgba(0, 255, 136, 0.15);
+            --warning: #ffaa00;
+            --warning-dim: rgba(255, 170, 0, 0.15);
+            --danger: #ff4444;
+            --danger-dim: rgba(255, 68, 68, 0.15);
+            --gradient-start: #00d4ff;
+            --gradient-end: #7b2ff7;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, rgba(123, 47, 247, 0.03) 0%, transparent 50%);
+            animation: bgPulse 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .header-content { max-width: 900px; margin: 0 auto; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 0 30px var(--accent-glow);
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+            50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px rgba(0, 212, 255, 0.1); }
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .stats-bar::-webkit-scrollbar { display: none; }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 80px;
+            position: relative;
+        }
+
+        .stat::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 60%;
+            background: var(--border);
+        }
+
+        .stat:last-child::after { display: none; }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filters {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .filters::-webkit-scrollbar { display: none; }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            font-family: var(--font-body);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-dim), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
+        }
+
+        .filter-btn:hover::before { opacity: 1; }
+
+        .filter-btn.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        .audio-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .audio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .audio-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 212, 255, 0.1);
+        }
+
+        .audio-card:hover::before { opacity: 0.5; }
+
+        .audio-header {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .play-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+
+        .play-btn.playing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+            50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px rgba(0, 212, 255, 0.2); }
+        }
+
+        .audio-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .audio-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .audio-meta {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-unplayed {
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .status-played {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success-dim);
+        }
+
+        .status-progress {
+            background: var(--warning);
+            box-shadow: 0 0 8px var(--warning-dim);
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .mark-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .mark-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .mark-btn.played {
+            background: var(--success-dim);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .audio-card {
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .audio-card:nth-child(1) { animation-delay: 0.1s; }
+        .audio-card:nth-child(2) { animation-delay: 0.2s; }
+        .audio-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .stat {
+            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .stat:nth-child(1) { animation-delay: 0.1s; }
+        .stat:nth-child(2) { animation-delay: 0.2s; }
+        .stat:nth-child(3) { animation-delay: 0.3s; }
+        .stat:nth-child(4) { animation-delay: 0.4s; }
+
+        @media (max-width: 640px) {
+            .header { padding: 16px 20px; }
+            .main { padding: 20px; }
+            .audio-header { padding: 20px; }
+            .audio-title { font-size: 15px; }
+            .play-btn { width: 48px; height: 48px; }
+            .stat-value { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">B</div>
+                <div>
+                    <div class="logo-text">Brownstone Bleeding Edge</div>
+                    <div class="subtitle">Weekly Audio Feed // v1.0</div>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value" id="total-articles">3</div>
+                    <div class="stat-label">Articles</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="unplayed-count">1</div>
+                    <div class="stat-label">Unplayed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="played-count">1</div>
+                    <div class="stat-label">Played</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="in-progress">1</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="filters">
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="unplayed">Unplayed</button>
+            <button class="filter-btn" data-filter="played">Played</button>
+            <button class="filter-btn" data-filter="in-progress">In Progress</button>
+        </div>
+    </div>
+
+    <main class="main">
+        <div class="section-title">Latest Articles</div>
+        
+        <div id="articles-container">
+            <!-- Article 1 - Unplayed -->
+            <div class="audio-card" data-status="unplayed">
+                <div class="audio-header">
+                    <div class="play-btn" onclick="togglePlay(this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </div>
+                    <div class="audio-info">
+                        <div class="audio-title">The $100 Trillion AI Opportunity</div>
+                        <div class="audio-meta">
+                            <span class="status-indicator status-unplayed"></span>
+                            <span>2026-06-02</span>
+                            <span>12:34</span>
+                            <span>Unplayed</span>
+                        </div>
+                    </div>
+                    <button class="mark-btn" onclick="markPlayed(this)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Mark Played
+                    </button>
+                </div>
+            </div>
+
+            <!-- Article 2 - Played -->
+            <div class="audio-card" data-status="played">
+                <div class="audio-header">
+                    <div class="play-btn" onclick="togglePlay(this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </div>
+                    <div class="audio-info">
+                        <div class="audio-title">Bitcoin's Next Halving: What History Tells Us</div>
+                        <div class="audio-meta">
+                            <span class="status-indicator status-played"></span>
+                            <span>2026-05-26</span>
+                            <span>8:45</span>
+                            <span>Played</span>
+                        </div>
+                    </div>
+                    <button class="mark-btn played" onclick="markPlayed(this)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Played
+                    </button>
+                </div>
+            </div>
+
+            <!-- Article 3 - In Progress -->
+            <div class="audio-card" data-status="in-progress">
+                <div class="audio-header">
+                    <div class="play-btn playing" onclick="togglePlay(this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    </div>
+                    <div class="audio-info">
+                        <div class="audio-title">The Small Cap Revolution</div>
+                        <div class="audio-meta">
+                            <span class="status-indicator status-progress"></span>
+                            <span>2026-05-19</span>
+                            <span>15:20</span>
+                            <span>In Progress</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <button class="mark-btn" onclick="markPlayed(this)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Mark Played
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>Brownstone Bleeding Edge Audio Feed</div>
+            <div style="margin-top: 4px; opacity: 0.6;">Updated weekly with new audio articles</div>
+        </div>
+    </main>
+
+    <script>
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.audio-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+
+                cards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = card.dataset.status === filter ? 'block' : 'none';
+                    }
+                });
+
+                updateStats();
+            });
+        });
+
+        function updateStats() {
+            const visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
+            const total = visibleCards.length;
+            const unplayed = visibleCards.filter(c => c.dataset.status === 'unplayed').length;
+            const played = visibleCards.filter(c => c.dataset.status === 'played').length;
+            const inProgress = visibleCards.filter(c => c.dataset.status === 'in-progress').length;
+
+            document.getElementById('total-articles').textContent = total;
+            document.getElementById('unplayed-count').textContent = unplayed;
+            document.getElementById('played-count').textContent = played;
+            document.getElementById('in-progress').textContent = inProgress;
+        }
+
+        function togglePlay(btn) {
+            const card = btn.closest('.audio-card');
+            const isPlaying = btn.classList.contains('playing');
+            
+            // Reset all play buttons
+            document.querySelectorAll('.play-btn').forEach(pb => {
+                pb.classList.remove('playing');
+                pb.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M8 5v14l11-7z"/></svg>';
+            });
+            
+            if (!isPlaying) {
+                btn.classList.add('playing');
+                btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                
+                // Update status to in-progress
+                card.dataset.status = 'in-progress';
+                updateStats();
+            }
+        }
+
+        function markPlayed(btn) {
+            const card = btn.closest('.audio-card');
+            const isPlayed = btn.classList.contains('played');
+            
+            if (!isPlayed) {
+                btn.classList.add('played');
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Played';
+                card.dataset.status = 'played';
+                
+                // Update status indicator
+                const indicator = card.querySelector('.status-indicator');
+                indicator.className = 'status-indicator status-played';
+                
+                // Update status text
+                const statusText = card.querySelector('.audio-meta span:last-child');
+                statusText.textContent = 'Played';
+                
+                updateStats();
+            }
+        }
+
+        updateStats();
+    </script>
+</body>
+</html>
