@@ -1,1085 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Brownstone Audio | Editorial Intelligence</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #050508;
-            --bg-secondary: #0a0a0f;
-            --bg-card: rgba(255, 255, 255, 0.02);
-            --bg-card-hover: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.12);
-            --text-primary: #f5f5f0;
-            --text-secondary: rgba(245, 245, 240, 0.55);
-            --text-muted: rgba(245, 245, 240, 0.30);
-            --accent-gold: #ffaa00;
-            --accent-gold-dim: rgba(255, 170, 0, 0.12);
-            --accent-gold-glow: rgba(255, 170, 0, 0.25);
-            --accent-purple: #7b2ff7;
-            --accent-purple-dim: rgba(123, 47, 247, 0.12);
-            --accent-purple-glow: rgba(123, 47, 247, 0.25);
-            --success: #00ff88;
-            --success-dim: rgba(0, 255, 136, 0.10);
-            --font-display: 'Playfair Display', Georgia, serif;
-            --font-body: 'Plus Jakarta Sans', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: var(--font-body);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Atmospheric background — layered mesh + noise */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 15% 20%, rgba(123, 47, 247, 0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 70% at 85% 75%, rgba(255, 170, 0, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse 50% 40% at 50% 50%, rgba(123, 47, 247, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-            animation: bgShift 25s ease-in-out infinite alternate;
-        }
-
-        @keyframes bgShift {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(-2%, 1%) scale(1.02); }
-            66% { transform: translate(1%, -1%) scale(0.98); }
-            100% { transform: translate(-1%, 2%) scale(1.01); }
-        }
-
-        /* Grain texture overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.6;
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(5, 5, 8, 0.80);
-            backdrop-filter: blur(24px) saturate(140%);
-            -webkit-backdrop-filter: blur(24px) saturate(140%);
-            border-bottom: 1px solid var(--border);
-            padding: 24px 24px 20px;
-        }
-
-        .header-content {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 32px;
-            align-items: start;
-        }
-
-        .brand {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .brand-name {
-            font-family: var(--font-display);
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
-            line-height: 1.1;
-        }
-
-        .brand-name em {
-            font-style: italic;
-            font-weight: 500;
-            color: var(--accent-gold);
-        }
-
-        .brand-tagline {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 28px;
-            align-items: flex-end;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2px;
-            position: relative;
-        }
-
-        .stat-value {
-            font-family: var(--font-display);
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            line-height: 1;
-            letter-spacing: -1px;
-        }
-
-        .stat-label {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* ===== FILTERS ===== */
-        .filters {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-            z-index: 1;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .filters::-webkit-scrollbar { display: none; }
-
-        .filter-group {
-            display: flex;
-            gap: 8px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .filter-btn {
-            padding: 8px 18px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            white-space: nowrap;
-            font-family: var(--font-body);
-            letter-spacing: 0.3px;
-        }
-
-        .filter-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--text-primary);
-            background: var(--accent-gold-dim);
-        }
-
-        .filter-btn.active {
-            background: var(--accent-gold-dim);
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
-            font-weight: 600;
-        }
-
-        /* ===== MAIN ===== */
-        .main {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 32px 24px 64px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: baseline;
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            white-space: nowrap;
-        }
-
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--border), transparent);
-        }
-
-        /* ===== ARTICLE CARDS — Magazine Style ===== */
-        .article-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 24px;
-            overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-
-        .article-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px; height: 100%;
-            background: linear-gradient(180deg, var(--accent-gold), transparent);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .article-card:hover {
-            border-color: var(--border-hover);
-            background: var(--bg-card-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 170, 0, 0.08);
-        }
-
-        .article-card:hover::before { opacity: 1; }
-
-        /* Featured card — asymmetric, larger */
-        .article-card.featured {
-            border-color: rgba(255, 170, 0, 0.15);
-        }
-
-        .article-card.featured::before {
-            opacity: 1;
-            width: 4px;
-            background: linear-gradient(180deg, var(--accent-gold), var(--accent-purple));
-        }
-
-        .article-card.featured .card-title {
-            font-size: 26px;
-        }
-
-        /* Card Header — asymmetric layout */
-        .card-header {
-            padding: 28px 28px 24px;
-            cursor: pointer;
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: 20px;
-            align-items: start;
-        }
-
-        .card-header-left {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 0;
-        }
-
-        .article-date {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--accent-gold);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .card-title {
-            font-family: var(--font-display);
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.25;
-            letter-spacing: -0.3px;
-        }
-
-        .card-title em {
-            font-style: italic;
-            font-weight: 500;
-            color: var(--accent-gold);
-        }
-
-        .card-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            margin-top: 4px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            font-family: var(--font-mono);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .badge-category {
-            background: var(--accent-purple-dim);
-            color: var(--accent-purple);
-            border: 1px solid rgba(123, 47, 247, 0.25);
-        }
-
-        .badge-status-ready {
-            background: var(--success-dim);
-            color: var(--success);
-            border: 1px solid rgba(0, 255, 136, 0.25);
-        }
-
-        .badge-status-processing {
-            background: var(--accent-gold-dim);
-            color: var(--accent-gold);
-            border: 1px solid rgba(255, 170, 0, 0.25);
-        }
-
-        .badge-status-published {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .badge-duration {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
-
-        /* Score — editorial style number */
-        .score-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            min-width: 48px;
-        }
-
-        .score-number {
-            font-family: var(--font-display);
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            line-height: 1;
-        }
-
-        .score-label {
-            font-family: var(--font-mono);
-            font-size: 9px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .expand-icon {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            color: var(--text-muted);
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.02);
-            flex-shrink: 0;
-        }
-
-        .expand-icon.rotated { transform: rotate(180deg); }
-
-        /* Card Body — expandable */
-        .card-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), padding 0.5s ease;
-        }
-
-        .card-body.expanded {
-            max-height: 2000px;
-            padding: 0 28px 28px;
-        }
-
-        .card-body-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-        }
-
-        .card-section { margin-bottom: 0; }
-        .card-section.full-width { grid-column: 1 / -1; }
-
-        .card-section-title {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .card-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.75;
-            font-family: var(--font-body);
-        }
-
-        .card-text strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .card-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .card-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            transition: all 0.3s ease;
-            font-family: var(--font-body);
-        }
-
-        .card-list li:last-child { border-bottom: none; }
-
-        .card-list li::before {
-            content: '—';
-            color: var(--accent-gold);
-            font-weight: 600;
-            font-family: var(--font-mono);
-            font-size: 12px;
-        }
-
-        .card-list li:hover {
-            color: var(--text-primary);
-            padding-left: 4px;
-        }
-
-        .card-list li .opp-value {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--accent-gold);
-            margin-left: auto;
-            white-space: nowrap;
-        }
-
-        /* Action Items */
-        .action-items {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .action-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .action-item:hover {
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .action-checkbox {
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
-            border: 2px solid var(--border-hover);
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .action-checkbox:hover {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 12px var(--accent-gold-glow);
-        }
-
-        .action-checkbox.checked {
-            background: var(--accent-gold);
-            border-color: var(--accent-gold);
-        }
-
-        .action-checkbox.checked::after {
-            content: '✓';
-            color: var(--bg-primary);
-            font-size: 12px;
-            font-weight: 700;
-            font-family: var(--font-body);
-        }
-
-        .action-text {
-            font-size: 13px;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            font-family: var(--font-body);
-        }
-
-        .action-item.checked .action-text {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .action-item:hover .action-text { color: var(--text-primary); }
-
-        /* Source Link */
-        .source-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--accent-gold);
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 12px;
-            transition: all 0.3s ease;
-            padding: 8px 14px;
-            border-radius: 6px;
-            background: var(--accent-gold-dim);
-            border: 1px solid rgba(255, 170, 0, 0.15);
-            font-family: var(--font-body);
-        }
-
-        .source-link:hover {
-            background: rgba(255, 170, 0, 0.18);
-            box-shadow: 0 0 20px var(--accent-gold-glow);
-            transform: translateY(-1px);
-        }
-
-        /* Audio Status Indicator */
-        .audio-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 12px;
-        }
-
-        .audio-status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .audio-status-dot.ready { background: var(--success); box-shadow: 0 0 8px rgba(0, 255, 136, 0.4); }
-        .audio-status-dot.processing { background: var(--accent-gold); animation: pulse 2s ease-in-out infinite; }
-        .audio-status-dot.published { background: var(--text-muted); }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        .audio-status-text {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-secondary);
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            padding: 48px 24px;
-            color: var(--text-muted);
-            font-size: 12px;
-            border-top: 1px solid var(--border);
-            margin-top: 48px;
-            position: relative;
-            z-index: 1;
-            font-family: var(--font-mono);
-            letter-spacing: 1px;
-        }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .article-card {
-            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-        }
-
-        .article-card:nth-child(1) { animation-delay: 0.15s; }
-        .article-card:nth-child(2) { animation-delay: 0.30s; }
-        .article-card:nth-child(3) { animation-delay: 0.45s; }
-
-        .stat {
-            animation: fadeInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-        }
-
-        .stat:nth-child(1) { animation-delay: 0.1s; }
-        .stat:nth-child(2) { animation-delay: 0.2s; }
-        .stat:nth-child(3) { animation-delay: 0.3s; }
-        .stat:nth-child(4) { animation-delay: 0.4s; }
-
-        .filter-btn {
-            animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-        }
-
-        .filter-btn:nth-child(1) { animation-delay: 0.05s; }
-        .filter-btn:nth-child(2) { animation-delay: 0.10s; }
-        .filter-btn:nth-child(3) { animation-delay: 0.15s; }
-        .filter-btn:nth-child(4) { animation-delay: 0.20s; }
-        .filter-btn:nth-child(5) { animation-delay: 0.25s; }
-        .filter-btn:nth-child(6) { animation-delay: 0.30s; }
-
-        /* ===== REDUCED MOTION ===== */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            body::before { animation: none; }
-        }
-
-        /* ===== MOBILE ===== */
-        @media (max-width: 768px) {
-            .header { padding: 18px 20px 16px; }
-            .header-content {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .stats-row { justify-content: flex-start; gap: 20px; }
-            .stat-value { font-size: 28px; }
-            .brand-name { font-size: 24px; }
-
-            .main { padding: 24px 20px 48px; }
-            .card-header {
-                grid-template-columns: 1fr auto;
-                padding: 20px 20px 18px;
-                gap: 14px;
-            }
-            .score-block { display: none; }
-            .card-title { font-size: 18px; }
-            .article-card.featured .card-title { font-size: 20px; }
-
-            .card-body.expanded { padding: 0 20px 20px; }
-            .card-body-grid { grid-template-columns: 1fr; gap: 20px; }
-
-            .filters { padding: 16px 20px; }
-            .filter-btn { padding: 7px 14px; font-size: 11px; }
-        }
-
-        @media (max-width: 480px) {
-            .card-header { grid-template-columns: 1fr; }
-            .expand-icon { display: none; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brownstone Audio — Editorial Tracker</title>
+  <meta name="description" content="Premium Brownstone Research audio tracker with playable article audio, waveform controls, and transcripts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f5f0;
+      --bg-soft: #efefe8;
+      --card: #fffef9;
+      --text: #1a1a2e;
+      --muted: #5b5b72;
+      --line: #dddccf;
+      --amber: #ffaa00;
+      --amber-soft: #fff1d2;
+      --purple: #7b2ff7;
+      --purple-soft: #efe4ff;
+      --ok: #1c9f6a;
+      --radius: 18px;
+      --shadow: 0 12px 30px rgba(32, 23, 59, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans';
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, #fff7e7 0%, transparent 30%),
+        radial-gradient(circle at 90% 100%, #f1e9ff 0%, transparent 26%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1080px, 100% - 28px);
+      margin: 0 auto;
+      padding: 18px 0 40px;
+    }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      border-bottom: 1px solid var(--line);
+      margin: 0 -14px;
+      padding: 16px 14px 14px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .kicker {
+      font-family: 'JetBrains Mono';
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: 'Playfair Display';
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      font: 600 13px 'Plus Jakarta Sans';
+      white-space: nowrap;
+      min-height: 44px;
+    }
+
+    .filter.active {
+      border-color: var(--amber);
+      background: var(--amber-soft);
+      color: #7a4d00;
+    }
+
+    .list {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: clip;
+    }
+
+    .card-head {
+      padding: 16px;
+      border-bottom: 1px dashed var(--line);
+      display: grid;
+      gap: 10px;
+    }
+
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono';
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid transparent;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pill.cat { background: var(--purple-soft); color: #5425aa; border-color: #d6bcff; }
+    .pill.status { background: var(--amber-soft); color: #8a5700; border-color: #ffd890; }
+
+    .title {
+      margin: 0;
+      font-family: 'Playfair Display';
+      font-size: clamp(1.25rem, 4.3vw, 2rem);
+      line-height: 1.18;
+    }
+
+    .player {
+      padding: 14px 16px 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .play {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--amber), #ffbe43);
+      color: #2a1b00;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(255, 170, 0, 0.35);
+      flex: 0 0 auto;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .play.playing {
+      animation: pulse 1.3s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.45); }
+      70% { box-shadow: 0 0 0 16px rgba(255, 170, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); }
+    }
+
+    .wave {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 38px;
+      flex: 1;
+      padding: 0 6px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #fff, #f8f7f1);
+      border: 1px solid #eceadb;
+    }
+
+    .bar {
+      width: 5px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, var(--purple), #a970ff);
+      animation: idle 1.2s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+
+    .is-playing .bar { animation-play-state: running; }
+
+    .bar:nth-child(odd) { animation-duration: 1.1s; }
+    .bar:nth-child(even) { animation-duration: 1.5s; }
+
+    @keyframes idle {
+      0%, 100% { height: 8px; }
+      50% { height: 30px; }
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 6px;
+    }
+
+    .times {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono';
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .progress {
+      width: 100%;
+      appearance: none;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--amber) var(--p, 0%), #e8e6d9 var(--p, 0%));
+      cursor: pointer;
+    }
+
+    .progress::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: var(--purple);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      font: 600 13px 'Plus Jakarta Sans';
+      min-height: 44px;
+    }
+
+    .btn.primary {
+      border-color: #ffd790;
+      background: var(--amber-soft);
+      color: #7f5000;
+    }
+
+    .btn.share {
+      border-color: #dac6ff;
+      background: var(--purple-soft);
+      color: #5f2bc2;
+    }
+
+    .transcript {
+      border-top: 1px solid var(--line);
+      padding: 0 16px 16px;
+    }
+
+    .toggle {
+      margin-top: 12px;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--purple);
+      font: 700 13px 'Plus Jakarta Sans';
+      cursor: pointer;
+      min-height: 44px;
+      text-align: left;
+    }
+
+    .text {
+      margin: 10px 0 0;
+      color: #38384f;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .text.open { display: block; }
+
+    .hidden { display: none !important; }
+
+    @media (min-width: 860px) {
+      .list { gap: 20px; }
+
+      .card-head {
+        grid-template-columns: 1fr auto;
+        align-items: start;
+      }
+
+      .row { gap: 16px; }
+
+      .play {
+        width: 64px;
+        height: 64px;
+      }
+
+      .title { font-size: clamp(1.4rem, 2.6vw, 2.2rem); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .play.playing, .bar { animation: none !important; }
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="brand">
-                <div class="brand-name">Brownstone <em>Audio</em></div>
-                <div class="brand-tagline">Editorial Intelligence // v2.0</div>
-            </div>
-            <div class="stats-row">
-                <div class="stat">
-                    <div class="stat-value" id="total-count">3</div>
-                    <div class="stat-label">Articles</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="ready-count">2</div>
-                    <div class="stat-label">Ready</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="published-count">1</div>
-                    <div class="stat-label">Published</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="avg-score">7.3</div>
-                    <div class="stat-label">Avg Score</div>
-                </div>
-            </div>
-        </div>
-    </header>
+  <main class="wrap">
+    <section class="top">
+      <div class="brand">
+        <p class="kicker">Brownstone Research • Audio Intelligence</p>
+        <h1>Editorial Audio Dashboard</h1>
+        <p class="sub">Track opportunities and listen instantly. Premium, clean, audio-first workflow for daily investor listening.</p>
+      </div>
+      <div class="filters" role="tablist" aria-label="Filter categories">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="investing">Investing</button>
+        <button class="filter" data-filter="tech">Tech</button>
+        <button class="filter" data-filter="biotech">Biotech</button>
+        <button class="filter" data-filter="energy">Energy</button>
+      </div>
+    </section>
 
-    <div class="filters">
-        <div class="filter-group">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="investing">Investing</button>
-            <button class="filter-btn" data-filter="tech">Tech</button>
-            <button class="filter-btn" data-filter="biotech">Biotech</button>
-            <button class="filter-btn" data-filter="energy">Energy</button>
-            <button class="filter-btn" data-filter="ready">Ready</button>
-        </div>
-    </div>
-
-    <main class="main">
-        <div class="section-header">
-            <span class="section-title">Latest Articles</span>
-            <span class="section-line"></span>
-        </div>
-
-        <div id="articles-container">
-            <!-- Featured Article -->
-            <div class="article-card featured" data-category="investing" data-status="ready" data-duration="12" data-score="8">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-header-left">
-                        <div class="article-date">December 15, 2024</div>
-                        <div class="card-title">The Bleeding Edge: <em>AI Infrastructure Plays</em></div>
-                        <div class="card-meta">
-                            <span class="badge badge-category">Investing</span>
-                            <span class="badge badge-status-ready">Ready</span>
-                            <span class="badge badge-duration">12 min read</span>
-                        </div>
-                    </div>
-                    <div class="score-block">
-                        <div class="score-number">8</div>
-                        <div class="score-label">Score</div>
-                    </div>
-                    <div class="expand-icon">
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 6l4 4 4-4"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-body-grid">
-                        <div class="card-section">
-                            <div class="card-section-title">Editorial Summary</div>
-                            <div class="card-text">
-                                Brownstone Research's <em>The Bleeding Edge</em> newsletter highlights AI infrastructure as the next big investment theme. Key plays include data center REITs, power utilities, and semiconductor equipment makers. The thesis: AI demand will strain existing infrastructure, creating winners in the "picks and shovels" layer.
-                            </div>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Key Opportunities</div>
-                            <ul class="card-list">
-                                <li>Data Center REITs <span class="opp-value">15-20% yield</span></li>
-                                <li>Power Utilities <span class="opp-value">2x grid demand</span></li>
-                                <li>Semiconductor Equipment <span class="opp-value">ASML, AMAT</span></li>
-                                <li>Cooling Systems <span class="opp-value">Liquid cooling</span></li>
-                            </ul>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Audio Status</div>
-                            <div class="audio-status">
-                                <div class="audio-status-dot ready"></div>
-                                <span class="audio-status-text">Ready for TTS conversion</span>
-                            </div>
-                            <div class="card-text">
-                                <strong>Duration:</strong> 12 minutes<br>
-                                <strong>Voice:</strong> Nova (warm, slightly British)<br>
-                                <strong>Quality Score:</strong> 8/10
-                            </div>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Action Items</div>
-                            <div class="action-items">
-                                <div class="action-item" onclick="toggleAction(this)">
-                                    <div class="action-checkbox"></div>
-                                    <div class="action-text">Convert to TTS audio</div>
-                                </div>
-                                <div class="action-item" onclick="toggleAction(this)">
-                                    <div class="action-checkbox"></div>
-                                    <div class="action-text">Upload to podcast feed</div>
-                                </div>
-                                <div class="action-item" onclick="toggleAction(this)">
-                                    <div class="action-checkbox"></div>
-                                    <div class="action-text">Share on Telegram channel</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-section full-width">
-                            <div class="card-section-title">Resources</div>
-                            <a href="#" class="source-link">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
-                                </svg>
-                                Brownstone Research Newsletter
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <section class="list" id="cards">
+      <article class="card" data-category="investing">
+        <header class="card-head">
+          <div>
+            <div class="meta-line">
+              <span>2026-06-08</span>
+              <span class="pill cat">Investing</span>
+              <span class="pill status">Ready</span>
+              <span>12:31</span>
             </div>
+            <h2 class="title">The Quiet Rotation: Why Capital is Sneaking Back Into Hard Assets</h2>
+          </div>
+          <div class="meta-line"><strong style="font-family:'Playfair Display';font-size:1.4rem;color:var(--amber)">86</strong> opportunity</div>
+        </header>
 
-            <!-- Article 2 -->
-            <div class="article-card" data-category="biotech" data-status="processing" data-duration="8" data-score="7">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-header-left">
-                        <div class="article-date">December 12, 2024</div>
-                        <div class="card-title">Gene Editing: <em>The Next Frontier</em></div>
-                        <div class="card-meta">
-                            <span class="badge badge-category">Biotech</span>
-                            <span class="badge badge-status-processing">Processing</span>
-                            <span class="badge badge-duration">8 min read</span>
-                        </div>
-                    </div>
-                    <div class="score-block">
-                        <div class="score-number">7</div>
-                        <div class="score-label">Score</div>
-                    </div>
-                    <div class="expand-icon">
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 6l4 4 4-4"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-body-grid">
-                        <div class="card-section">
-                            <div class="card-section-title">Editorial Summary</div>
-                            <div class="card-text">
-                                CRISPR 2.0 and base editing are moving from lab to clinic. Multiple Phase 3 trials expected in 2025. Key players: Editas, Intellia, Beam Therapeutics. The "downloadable drug" concept — personalized gene therapies manufactured at point-of-care.
-                            </div>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Key Opportunities</div>
-                            <ul class="card-list">
-                                <li>Gene Editing Platforms <span class="opp-value">CRISPR 2.0</span></li>
-                                <li>Personalized Medicine <span class="opp-value">Point-of-care</span></li>
-                                <li>Rare Diseases <span class="opp-value">Fast approval</span></li>
-                                <li>Agricultural Applications <span class="opp-value">Gene-edited crops</span></li>
-                            </ul>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Audio Status</div>
-                            <div class="audio-status">
-                                <div class="audio-status-dot processing"></div>
-                                <span class="audio-status-text">TTS processing in progress</span>
-                            </div>
-                            <div class="card-text">
-                                <strong>Duration:</strong> 8 minutes<br>
-                                <strong>Voice:</strong> Nova<br>
-                                <strong>Quality Score:</strong> 7/10
-                            </div>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Action Items</div>
-                            <div class="action-items">
-                                <div class="action-item" onclick="toggleAction(this)">
-                                    <div class="action-checkbox"></div>
-                                    <div class="action-text">Wait for TTS processing to complete</div>
-                                </div>
-                                <div class="action-item" onclick="toggleAction(this)">
-                                    <div class="action-checkbox"></div>
-                                    <div class="action-text">Review audio quality</div>
-                                </div>
-                                <div class="action-item" onclick="toggleAction(this)">
-                                    <div class="action-checkbox"></div>
-                                    <div class="action-text">Upload to podcast feed</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="player" data-id="a1">
+          <audio preload="metadata" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+          <div class="row">
+            <button class="play" aria-label="Play article audio">▶</button>
+            <div class="wave" aria-hidden="true">
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
             </div>
-
-            <!-- Article 3 -->
-            <div class="article-card" data-category="energy" data-status="published" data-duration="15" data-score="6">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-header-left">
-                        <div class="article-date">December 10, 2024</div>
-                        <div class="card-title">Nuclear Renaissance: <em>Small Modular Reactors</em></div>
-                        <div class="card-meta">
-                            <span class="badge badge-category">Energy</span>
-                            <span class="badge badge-status-published">Published</span>
-                            <span class="badge badge-duration">15 min read</span>
-                        </div>
-                    </div>
-                    <div class="score-block">
-                        <div class="score-number">6</div>
-                        <div class="score-label">Score</div>
-                    </div>
-                    <div class="expand-icon">
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 6l4 4 4-4"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="card-body-grid">
-                        <div class="card-section">
-                            <div class="card-section-title">Editorial Summary</div>
-                            <div class="card-text">
-                                SMRs (Small Modular Reactors) are gaining traction as a solution to baseload power needs. NuScale, Rolls-Royce, and TerraPower leading development. Regulatory approval is the key bottleneck. First deployments expected 2028-2030.
-                            </div>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Key Opportunities</div>
-                            <ul class="card-list">
-                                <li>SMR Developers <span class="opp-value">NuScale, TerraPower</span></li>
-                                <li>Uranium Miners <span class="opp-value">Supply constrained</span></li>
-                                <li>Grid Infrastructure <span class="opp-value">Transmission upgrades</span></li>
-                                <li>Waste Management <span class="opp-value">Long-term storage</span></li>
-                            </ul>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Audio Status</div>
-                            <div class="audio-status">
-                                <div class="audio-status-dot published"></div>
-                                <span class="audio-status-text">Published to podcast feed</span>
-                            </div>
-                            <div class="card-text">
-                                <strong>Duration:</strong> 15 minutes<br>
-                                <strong>Voice:</strong> Nova<br>
-                                <strong>Quality Score:</strong> 6/10
-                            </div>
-                        </div>
-                        <div class="card-section">
-                            <div class="card-section-title">Action Items</div>
-                            <div class="action-items">
-                                <div class="action-item checked" onclick="toggleAction(this)">
-                                    <div class="action-checkbox checked"></div>
-                                    <div class="action-text">Convert to TTS audio</div>
-                                </div>
-                                <div class="action-item checked" onclick="toggleAction(this)">
-                                    <div class="action-checkbox checked"></div>
-                                    <div class="action-text">Upload to podcast feed</div>
-                                </div>
-                                <div class="action-item checked" onclick="toggleAction(this)">
-                                    <div class="action-checkbox checked"></div>
-                                    <div class="action-text">Share on Telegram channel</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-section full-width">
-                            <div class="card-section-title">Resources</div>
-                            <a href="#" class="source-link">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
-                                </svg>
-                                Listen on Podcast Feed
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
+          <div class="progress-wrap">
+            <input class="progress" type="range" min="0" max="100" value="0" aria-label="Seek audio" />
+            <div class="times"><span class="current">00:00</span><span class="duration">--:--</span></div>
+          </div>
+          <div class="actions">
+            <a class="btn primary download" href="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" download>Download Audio</a>
+            <button class="btn share" data-share="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">Share Link</button>
+          </div>
         </div>
 
-        <div class="footer">
-            <div>Brownstone Audio Dashboard</div>
-            <div style="margin-top: 6px; opacity: 0.5; font-size: 11px;">Updated automatically when new articles are processed</div>
+        <div class="transcript">
+          <button class="toggle">Show transcript</button>
+          <p class="text">Today’s note examines capital flow shifts toward energy infrastructure, transport rails, and industrial metals. The thesis: institutional money is re-pricing inflation persistence and liquidity fragility. Key takeaway: the trend is early, not crowded.</p>
         </div>
-    </main>
+      </article>
 
-    <script>
-        function toggleCard(header) {
-            const card = header.parentElement;
-            const body = card.querySelector('.card-body');
-            const icon = header.querySelector('.expand-icon');
-            body.classList.toggle('expanded');
-            if (icon) icon.classList.toggle('rotated');
+      <article class="card" data-category="tech">
+        <header class="card-head">
+          <div>
+            <div class="meta-line">
+              <span>2026-06-07</span>
+              <span class="pill cat">Tech</span>
+              <span class="pill status">Ready</span>
+              <span>09:42</span>
+            </div>
+            <h2 class="title">AI Infrastructure Isn’t Done: The Next Compute Bottleneck is Physical</h2>
+          </div>
+          <div class="meta-line"><strong style="font-family:'Playfair Display';font-size:1.4rem;color:var(--amber)">79</strong> opportunity</div>
+        </header>
+
+        <div class="player" data-id="a2">
+          <audio preload="metadata" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+          <div class="row">
+            <button class="play" aria-label="Play article audio">▶</button>
+            <div class="wave" aria-hidden="true">
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <input class="progress" type="range" min="0" max="100" value="0" aria-label="Seek audio" />
+            <div class="times"><span class="current">00:00</span><span class="duration">--:--</span></div>
+          </div>
+          <div class="actions">
+            <a class="btn primary download" href="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" download>Download Audio</a>
+            <button class="btn share" data-share="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">Share Link</button>
+          </div>
+        </div>
+
+        <div class="transcript">
+          <button class="toggle">Show transcript</button>
+          <p class="text">Compute scaling now depends on power, cooling, and fabrication lead-times more than model architecture alone. The episode maps the public-equity names exposed to that constraint, including grid and thermal components.</p>
+        </div>
+      </article>
+
+      <article class="card" data-category="biotech">
+        <header class="card-head">
+          <div>
+            <div class="meta-line">
+              <span>2026-06-06</span>
+              <span class="pill cat">Biotech</span>
+              <span class="pill status">Ready</span>
+              <span>14:18</span>
+            </div>
+            <h2 class="title">The Small-Cap Biotech Window is Reopening Before Headlines Notice</h2>
+          </div>
+          <div class="meta-line"><strong style="font-family:'Playfair Display';font-size:1.4rem;color:var(--amber)">74</strong> opportunity</div>
+        </header>
+
+        <div class="player" data-id="a3">
+          <audio preload="metadata" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"></audio>
+          <div class="row">
+            <button class="play" aria-label="Play article audio">▶</button>
+            <div class="wave" aria-hidden="true">
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <input class="progress" type="range" min="0" max="100" value="0" aria-label="Seek audio" />
+            <div class="times"><span class="current">00:00</span><span class="duration">--:--</span></div>
+          </div>
+          <div class="actions">
+            <a class="btn primary download" href="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" download>Download Audio</a>
+            <button class="btn share" data-share="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">Share Link</button>
+          </div>
+        </div>
+
+        <div class="transcript">
+          <button class="toggle">Show transcript</button>
+          <p class="text">This article tracks unusual financing terms and insider accumulation in select clinical-stage names. Brownstone frames this as a risk-on pocket inside a still-selective healthcare market.</p>
+        </div>
+      </article>
+
+      <article class="card" data-category="energy">
+        <header class="card-head">
+          <div>
+            <div class="meta-line">
+              <span>2026-06-05</span>
+              <span class="pill cat">Energy</span>
+              <span class="pill status">Ready</span>
+              <span>10:05</span>
+            </div>
+            <h2 class="title">The Nuclear Supply Chain Repricing is Entering Phase Two</h2>
+          </div>
+          <div class="meta-line"><strong style="font-family:'Playfair Display';font-size:1.4rem;color:var(--amber)">82</strong> opportunity</div>
+        </header>
+
+        <div class="player" data-id="a4">
+          <audio preload="metadata" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"></audio>
+          <div class="row">
+            <button class="play" aria-label="Play article audio">▶</button>
+            <div class="wave" aria-hidden="true">
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <input class="progress" type="range" min="0" max="100" value="0" aria-label="Seek audio" />
+            <div class="times"><span class="current">00:00</span><span class="duration">--:--</span></div>
+          </div>
+          <div class="actions">
+            <a class="btn primary download" href="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" download>Download Audio</a>
+            <button class="btn share" data-share="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3">Share Link</button>
+          </div>
+        </div>
+
+        <div class="transcript">
+          <button class="toggle">Show transcript</button>
+          <p class="text">The briefing links reactor restart policy momentum to under-owned suppliers in conversion, enrichment, and specialty components. Duration risk remains high, but timing has improved materially.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const players = Array.from(document.querySelectorAll('.player'));
+
+    function formatTime(seconds) {
+      if (!isFinite(seconds)) return '--:--';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${String(mins).padStart(2, '0')}:${secs}`;
+    }
+
+    function stopOtherPlayers(currentPlayer) {
+      players.forEach((p) => {
+        if (p !== currentPlayer) {
+          const a = p.querySelector('audio');
+          const b = p.querySelector('.play');
+          p.classList.remove('is-playing');
+          b.classList.remove('playing');
+          b.textContent = '▶';
+          a.pause();
         }
+      });
+    }
 
-        function toggleAction(item) {
-            const checkbox = item.querySelector('.action-checkbox');
-            checkbox.classList.toggle('checked');
-            item.classList.toggle('checked');
+    players.forEach((player) => {
+      const audio = player.querySelector('audio');
+      const playBtn = player.querySelector('.play');
+      const progress = player.querySelector('.progress');
+      const current = player.querySelector('.current');
+      const duration = player.querySelector('.duration');
+      const share = player.querySelector('.share');
+
+      audio.addEventListener('loadedmetadata', () => {
+        duration.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        progress.value = pct;
+        progress.style.setProperty('--p', `${pct}%`);
+        current.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener('ended', () => {
+        player.classList.remove('is-playing');
+        playBtn.classList.remove('playing');
+        playBtn.textContent = '▶';
+      });
+
+      playBtn.addEventListener('click', async () => {
+        if (audio.paused) {
+          stopOtherPlayers(player);
+          try {
+            await audio.play();
+            player.classList.add('is-playing');
+            playBtn.classList.add('playing');
+            playBtn.textContent = '❚❚';
+          } catch (_) {}
+        } else {
+          audio.pause();
+          player.classList.remove('is-playing');
+          playBtn.classList.remove('playing');
+          playBtn.textContent = '▶';
         }
+      });
 
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.article-card');
+      progress.addEventListener('input', () => {
+        const pct = Number(progress.value) || 0;
+        progress.style.setProperty('--p', `${pct}%`);
+      });
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const filter = btn.dataset.filter;
-                cards.forEach(card => {
-                    if (filter === 'all') {
-                        card.style.display = 'block';
-                    } else if (filter === 'ready') {
-                        card.style.display = card.dataset.status === 'ready' ? 'block' : 'none';
-                    } else {
-                        card.style.display = card.dataset.category === filter ? 'block' : 'none';
-                    }
-                });
-                updateStats();
-            });
+      progress.addEventListener('change', () => {
+        if (!audio.duration) return;
+        const pct = Number(progress.value) / 100;
+        audio.currentTime = pct * audio.duration;
+      });
+
+      share.addEventListener('click', async () => {
+        const url = share.dataset.share;
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: 'Brownstone Audio', url });
+          } else {
+            await navigator.clipboard.writeText(url);
+            share.textContent = 'Link Copied';
+            setTimeout(() => (share.textContent = 'Share Link'), 1200);
+          }
+        } catch (_) {}
+      });
+    });
+
+    document.querySelectorAll('.toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const text = toggle.nextElementSibling;
+        text.classList.toggle('open');
+        toggle.textContent = text.classList.contains('open') ? 'Hide transcript' : 'Show transcript';
+      });
+    });
+
+    const filters = document.querySelectorAll('.filter');
+    const cards = document.querySelectorAll('.card');
+
+    filters.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filters.forEach((f) => f.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.filter;
+
+        cards.forEach((card) => {
+          const show = target === 'all' || card.dataset.category === target;
+          card.classList.toggle('hidden', !show);
         });
-
-        function updateStats() {
-            const visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
-            const total = visibleCards.length;
-            const ready = visibleCards.filter(c => c.dataset.status === 'ready').length;
-            const published = visibleCards.filter(c => c.dataset.status === 'published').length;
-            const avgScore = total > 0
-                ? (visibleCards.reduce((sum, c) => sum + parseInt(c.dataset.score), 0) / total).toFixed(1)
-                : '0.0';
-            document.getElementById('total-count').textContent = total;
-            document.getElementById('ready-count').textContent = ready;
-            document.getElementById('published-count').textContent = published;
-            document.getElementById('avg-score').textContent = avgScore;
-        }
-
-        updateStats();
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
