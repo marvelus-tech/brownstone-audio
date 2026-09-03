@@ -1,0 +1,81 @@
+name: Sweep Heard MP3s
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # Daily at 22:00 UTC (08:00 Melbourne)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Sweep Expired Listens
+        run: |
+          if [ ! -f listens.json ] || [ ! -s listens.json ]; then
+            echo "No listens.json or empty, nothing to sweep"
+            exit 0
+          fi
+          
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          CHANGED=0
+          
+          # Get expired slugs
+          EXPIRED_SLUGS=$(jq -r --arg now "$NOW" '
+            to_entries 
+            | map(select(.value.delete_after <= $now)) 
+            | map(.key) 
+            | .[]
+          ' listens.json)
+          
+          if [ -z "$EXPIRED_SLUGS" ]; then
+            echo "No expired listens found"
+            exit 0
+          fi
+          
+          echo "Found expired listens:"
+          echo "$EXPIRED_SLUGS"
+          
+          # Process each expired slug
+          for SLUG in $EXPIRED_SLUGS; do
+            echo "Processing: $SLUG"
+            
+            # Get audio path from articles.json
+            AUDIO_PATH=$(jq -r --arg slug "$SLUG" '.[] | select(.slug == $slug) | .audio' articles.json)
+            
+            if [ -n "$AUDIO_PATH" ] && [ -f "$AUDIO_PATH" ]; then
+              echo "  Deleting: $AUDIO_PATH"
+              git rm "$AUDIO_PATH"
+              CHANGED=1
+            else
+              echo "  Audio not found: $AUDIO_PATH"
+            fi
+            
+            # Remove from articles.json
+            if jq -e --arg slug "$SLUG" '.[] | select(.slug == $slug)' articles.json > /dev/null; then
+              echo "  Removing from articles.json"
+              jq --arg slug "$SLUG" 'map(select(.slug != $slug))' articles.json > articles.json.tmp
+              mv articles.json.tmp articles.json
+              CHANGED=1
+            fi
+            
+            # Remove from listens.json
+            jq --arg slug "$SLUG" 'del(.[$slug])' listens.json > listens.json.tmp
+            mv listens.json.tmp listens.json
+            CHANGED=1
+          done
+          
+          echo "CHANGED=$CHANGED" >> $GITHUB_ENV
+      
+      - name: Commit Changes
+        if: env.CHANGED == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add articles.json listens.json
+          git commit -m "Sweep expired listens (deleted $(echo '${{ env.EXPIRED_SLUGS }}' | wc -w) articles)"
+          git push

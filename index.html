@@ -36,6 +36,29 @@
     .meta h2 { margin: 0 0 4px; font-size: 1rem; line-height: 1.35; }
     .meta p { margin: 0; color: var(--muted); font-size: .92rem; }
     .src { color: var(--accent); text-decoration: none; font-size: .88rem; display: inline-block; margin-top: 6px; }
+    .badge { 
+      background: rgba(20, 241, 149, 0.15);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: .82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .keep-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .keep-btn:hover { opacity: 0.85; }
     audio { width: 100%; }
     footer { margin-top: 18px; color: var(--muted); font-size: .84rem; }
     @media (min-width: 700px) {
@@ -47,220 +70,208 @@
   <main class="wrap">
     <h1>Brownstone Audio — Bleeding Edge</h1>
     <p class="sub">Latest article narrations, newest first.</p>
-    <section class="list">
-      <article class="card">
-  <div class="meta">
-    <h2>Jackson Hole Takeaways on the Onchain Future of Finance</h2>
-    <p>Sep 1, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/jackson-hole-takeaways-on-the-onchain-future-of-finance/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/jackson-hole-takeaways-on-the-onchain-future-of-finance.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Unpacking the “Chip System”</h2>
-    <p>Aug 31, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/unpacking-the-chip-system/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/unpacking-the-chip-system.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Pecan Island Will Become the Largest Spaceport in History</h2>
-    <p>Aug 28, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/pecan-island-will-become-the-largest-spaceport-in-history/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/pecan-island-will-become-the-largest-spaceport-in-history.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>NVIDIA Delivers Blockbuster Results Again</h2>
-    <p>Aug 27, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/nvidia-delivers-blockbuster-results-again/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/nvidia-delivers-blockbuster-results-again.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Redefining Our Idea of “Money”</h2>
-    <p>Aug 26, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/redefining-our-idea-of-money/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/redefining-our-idea-of-money.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Grid Said No… So Amazon Built Its Own Power Plant</h2>
-    <p>Aug 25, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-grid-said-no-so-amazon-built-its-own-power-plant/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-grid-said-no-so-amazon-built-its-own-power-plant.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Bessent’s Move Is Priming Crypto for October</h2>
-    <p>Aug 24, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/bessents-move-is-priming-crypto-for-october/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/bessents-move-is-priming-crypto-for-october.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The AI Boom Needs This Critical Metal</h2>
-    <p>Aug 21, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-ai-boom-needs-this-critical-metal/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-ai-boom-needs-this-critical-metal.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>A Cure for Cancer?</h2>
-    <p>Aug 20, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/a-cure-for-cancer/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/a-cure-for-cancer.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The AI Profit Gap Has Appeared</h2>
-    <p>Aug 19, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-ai-profit-gap-has-appeared/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-ai-profit-gap-has-appeared.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Blockchain With a “Brain”</h2>
-    <p>Aug 19, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/blockchain-with-a-brain/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/blockchain-with-a-brain.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Shedding Light on the New AI Bottleneck</h2>
-    <p>Aug 18, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/shedding-light-on-the-new-ai-bottleneck/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/shedding-light-on-the-new-ai-bottleneck.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Why the Crypto Market Is Bullish… Even Without CLARITY</h2>
-    <p>Aug 17, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/why-the-crypto-market-is-bullish-even-without-clarity/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/why-the-crypto-market-is-bullish-even-without-clarity.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Resource Supercycle</h2>
-    <p>Aug 13, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-resource-supercycle/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-resource-supercycle.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Next Great Security Build Has Begun</h2>
-    <p>Aug 12, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-next-great-security-build-has-begun/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-next-great-security-build-has-begun.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>What’s Next for the CLARITY Act</h2>
-    <p>Aug 12, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/whats-next-for-the-clarity-act/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/whats-next-for-the-clarity-act.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Digital Battleground to Protect Your Data</h2>
-    <p>Aug 11, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-digital-battleground-to-protect-your-data/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-digital-battleground-to-protect-your-data.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Musk’s Hidden Easter Egg in Terafab</h2>
-    <p>Aug 7, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/musks-hidden-easter-egg-in-terafab/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/musks-hidden-easter-egg-in-terafab.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>A Cure for Aging?</h2>
-    <p>Aug 6, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/a-cure-for-aging/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/a-cure-for-aging.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Brownstone Research Smartphone App Is Live</h2>
-    <p>Aug 5, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-brownstone-research-smartphone-app-is-live-tbe/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-brownstone-research-smartphone-app-is-live-tbe.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Blockchain Technology Is Revolutionary</h2>
-    <p>Aug 5, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/blockchain-technology-is-revolutionary/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/blockchain-technology-is-revolutionary.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Situationally Unaware</h2>
-    <p>Aug 4, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/situationally-unaware/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/situationally-unaware.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>One of the Most Consequential Monetary Shifts of Our Lifetime</h2>
-    <p>Aug 4, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/one-of-the-most-consequential-monetary-shifts-of-our-lifetime/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/one-of-the-most-consequential-monetary-shifts-of-our-lifetime.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Big Tech’s AI Bet Is Starting to Pay Off</h2>
-    <p>Aug 3, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/big-techs-ai-bet-is-starting-to-pay-off/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/big-techs-ai-bet-is-starting-to-pay-off.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Anthropic’s Push for Regulatory Capture</h2>
-    <p>Jul 31, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/anthropics-push-for-regulatory-capture/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/anthropics-push-for-regulatory-capture.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Push for Open-Weight AI</h2>
-    <p>Jul 31, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-push-for-open-weight-ai/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-push-for-open-weight-ai.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Will Robots Lead to the End of the American Dream?</h2>
-    <p>Jul 30, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/will-robots-lead-to-the-end-of-the-american-dream/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/will-robots-lead-to-the-end-of-the-american-dream.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>The Eleventh-Hour Push for CLARITY</h2>
-    <p>Jul 29, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-eleventh-hour-push-for-clarity/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/the-eleventh-hour-push-for-clarity.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Electrical Steel</h2>
-    <p>Jul 27, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/electrical-steel/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/electrical-steel.mp3"></audio>
-</article><article class="card">
-  <div class="meta">
-    <h2>Starship’s 13th Test Launch</h2>
-    <p>Jul 23, 2026</p>
-    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/starships-13th-test-launch/" target="_blank" rel="noopener">Source ↗</a>
-  </div>
-  <audio controls preload="none" src="audio/starships-13th-test-launch.mp3"></audio>
-</article>
-    </section>
+    <section class="list" id="articleList"></section>
     <footer>Auto-generated from the Brownstone monitor workflow.</footer>
   </main>
+
+  <script>
+    (async () => {
+      // Handle authentication token from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.slice(1));
+      const tokenFromUrl = urlParams.get('key') || hashParams.get('key');
+      
+      if (tokenFromUrl) {
+        localStorage.setItem('listenToken', tokenFromUrl);
+        // Clean URL without reload
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+
+      const token = localStorage.getItem('listenToken');
+      const heardLocal = JSON.parse(localStorage.getItem('heardLocal') || '{}');
+
+      // Fetch data
+      const [articlesRes, listensRes] = await Promise.all([
+        fetch('articles.json'),
+        fetch('listens.json').catch(() => ({ json: async () => ({}) }))
+      ]);
+      
+      const articles = await articlesRes.json();
+      const listens = await listensRes.json();
+      
+      const now = Date.now();
+      const listEl = document.getElementById('articleList');
+      
+      // Render cards
+      for (const article of articles) {
+        const listen = listens[article.slug];
+        const heardAt = listen?.heard_at || heardLocal[article.slug];
+        const deleteAfter = listen?.delete_after;
+        
+        // Skip cards that should already be deleted
+        if (deleteAfter && new Date(deleteAfter) < now) continue;
+        
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.dataset.slug = article.slug;
+        
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        
+        const title = document.createElement('h2');
+        title.textContent = article.title;
+        
+        const date = document.createElement('p');
+        date.textContent = article.date;
+        
+        const link = document.createElement('a');
+        link.className = 'src';
+        link.href = article.url;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = 'Source ↗';
+        
+        meta.appendChild(title);
+        meta.appendChild(date);
+        
+        // Add badge if heard
+        if (heardAt) {
+          const badge = document.createElement('div');
+          badge.className = 'badge';
+          badge.innerHTML = 'Heard · deletes in 3 days <button class="keep-btn">Keep</button>';
+          
+          const keepBtn = badge.querySelector('.keep-btn');
+          keepBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            
+            // Remove from localStorage
+            delete heardLocal[article.slug];
+            localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
+            
+            // Call GitHub API if authenticated
+            if (token) {
+              try {
+                await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/vnd.github+json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    event_type: 'listen_keep',
+                    client_payload: { slug: article.slug }
+                  })
+                });
+              } catch (err) {
+                // Fail silently
+                console.error('Keep API error:', err);
+              }
+            }
+            
+            // Remove badge
+            badge.remove();
+          });
+          
+          meta.appendChild(badge);
+        }
+        
+        meta.appendChild(link);
+        
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.preload = 'none';
+        audio.src = article.audio;
+        
+        // Track completion
+        let completed = false;
+        const markComplete = async () => {
+          if (completed) return;
+          completed = true;
+          
+          // Store in localStorage
+          heardLocal[article.slug] = new Date().toISOString();
+          localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
+          
+          // Add badge immediately
+          const badge = document.createElement('div');
+          badge.className = 'badge';
+          badge.innerHTML = 'Heard · deletes in 3 days <button class="keep-btn">Keep</button>';
+          
+          const keepBtn = badge.querySelector('.keep-btn');
+          keepBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            delete heardLocal[article.slug];
+            localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
+            
+            if (token) {
+              try {
+                await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/vnd.github+json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    event_type: 'listen_keep',
+                    client_payload: { slug: article.slug }
+                  })
+                });
+              } catch (err) {
+                console.error('Keep API error:', err);
+              }
+            }
+            
+            badge.remove();
+          });
+          
+          // Find where to insert (after date, before link)
+          const existingBadge = meta.querySelector('.badge');
+          if (!existingBadge) {
+            meta.insertBefore(badge, link);
+          }
+          
+          // Call GitHub API if authenticated
+          if (token) {
+            try {
+              await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Accept': 'application/vnd.github+json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  event_type: 'listen_complete',
+                  client_payload: { 
+                    slug: article.slug,
+                    audio: article.audio 
+                  }
+                })
+              });
+            } catch (err) {
+              console.error('Complete API error:', err);
+            }
+          }
+        };
+        
+        // Ended event
+        audio.addEventListener('ended', markComplete);
+        
+        // 98% fallback on timeupdate
+        audio.addEventListener('timeupdate', () => {
+          if (audio.duration && audio.currentTime / audio.duration >= 0.98) {
+            markComplete();
+          }
+        });
+        
+        card.appendChild(meta);
+        card.appendChild(audio);
+        listEl.appendChild(card);
+      }
+    })();
+  </script>
 </body>
 </html>
