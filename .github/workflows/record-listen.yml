@@ -1,0 +1,75 @@
+name: Record Listen
+
+on:
+  repository_dispatch:
+    types: [listen_complete, listen_keep]
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Process Listen Event
+        run: |
+          EVENT_TYPE="${{ github.event.action }}"
+          SLUG="${{ github.event.client_payload.slug }}"
+          
+          # Validate slug exists in articles.json
+          if ! jq -e --arg slug "$SLUG" '.[] | select(.slug == $slug)' articles.json > /dev/null; then
+            echo "Invalid slug: $SLUG (not found in articles.json)"
+            exit 0
+          fi
+          
+          # Read current listens.json
+          if [ ! -f listens.json ]; then
+            echo "{}" > listens.json
+          fi
+          
+          CHANGED=0
+          
+          if [ "$EVENT_TYPE" = "listen_complete" ]; then
+            # Upsert: add or update heard_at and delete_after
+            HEARD_AT=$(jq -r --arg slug "$SLUG" '.[$slug].heard_at // empty' listens.json)
+            
+            if [ -z "$HEARD_AT" ]; then
+              # New entry
+              NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+              DELETE_AFTER=$(date -u -d "+72 hours" +"%Y-%m-%dT%H:%M:%SZ")
+              
+              jq --arg slug "$SLUG" \
+                 --arg heard_at "$NOW" \
+                 --arg delete_after "$DELETE_AFTER" \
+                 '.[$slug] = {heard_at: $heard_at, delete_after: $delete_after}' \
+                 listens.json > listens.json.tmp
+              
+              mv listens.json.tmp listens.json
+              CHANGED=1
+            else
+              echo "Slug $SLUG already has heard_at: $HEARD_AT (not resetting)"
+            fi
+            
+          elif [ "$EVENT_TYPE" = "listen_keep" ]; then
+            # Remove entry
+            if jq -e --arg slug "$SLUG" '.[$slug]' listens.json > /dev/null; then
+              jq --arg slug "$SLUG" 'del(.[$slug])' listens.json > listens.json.tmp
+              mv listens.json.tmp listens.json
+              CHANGED=1
+            else
+              echo "Slug $SLUG not in listens.json (nothing to remove)"
+            fi
+          fi
+          
+          echo "CHANGED=$CHANGED" >> $GITHUB_ENV
+      
+      - name: Commit Changes
+        if: env.CHANGED == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add listens.json
+          git commit -m "Update listens.json (${{ github.event.action }}: ${{ github.event.client_payload.slug }})"
+          git push
