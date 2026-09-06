@@ -6,109 +6,183 @@
   <title>Brownstone Audio (Bleeding Edge)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* Design Tokens */
     :root {
-      --cream: #FAF8F5;
-      --ink: #1a1a1a;
-      --ink-muted: #5a5a5a;
-      --border: #e0dcd5;
-      --card: #ffffff;
-      --accent: #7a9b8e;
-      --accent-hover: #698a7d;
-      --accent-light: #f0f4f2;
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
-      --font-display: 'Crimson Pro', Georgia, serif;
-      --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      /* Colors: Editorial Salon */
+      --field: #F9F6F1;
+      --paper: #FFFDFB;
+      --ink: #121212;
+      --ink-secondary: #4A4A4A;
+      --ink-tertiary: #878787;
+      --border-soft: #E8E3DC;
+      --border: #D4CFC6;
+      --accent: #C96850;
+      --accent-hover: #B35840;
+      --accent-light: #FDF5F3;
+      --shadow-card: 0 1px 3px rgba(18, 18, 18, 0.06);
+      --shadow-hover: 0 8px 24px rgba(18, 18, 18, 0.12);
+      --shadow-press: 0 2px 8px rgba(18, 18, 18, 0.1);
+      
+      /* Typography: Fraunces (display) + DM Sans (body) */
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+      
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --duration-fast: 140ms;
+      --duration-base: 200ms;
+      --duration-slow: 280ms;
     }
     
-    * { box-sizing: border-box; }
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     
     body {
-      margin: 0;
       font-family: var(--font-body);
-      background: var(--cream);
+      background: var(--field);
       color: var(--ink);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+    
+    /* Subtle paper texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(201, 104, 80, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(201, 104, 80, 0.02) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
     
     .wrap {
-      max-width: 920px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 32px 16px 80px;
+      padding: 0 20px 120px;
+      position: relative;
+      z-index: 1;
     }
     
-    header {
-      margin-bottom: 32px;
+    /* Hero: Thesis Statement */
+    .hero {
+      padding: 64px 0 48px;
+      max-width: 720px;
     }
     
-    h1 {
-      margin: 0 0 8px;
+    .hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(2rem, 3.5vw, 2.75rem);
-      font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
       color: var(--ink);
+      margin-bottom: 16px;
+      font-variation-settings: 'opsz' 144;
     }
     
-    .subtitle {
-      color: var(--ink-muted);
-      margin: 0 0 24px;
-      font-size: 1rem;
+    .hero-promise {
+      font-size: clamp(1.125rem, 2vw, 1.375rem);
+      color: var(--ink-secondary);
+      margin-bottom: 12px;
+      font-weight: 400;
+      line-height: 1.5;
     }
     
+    .hero-count {
+      font-size: 0.9375rem;
+      color: var(--ink-tertiary);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    
+    /* Search */
     .search-wrap {
-      margin-bottom: 24px;
+      margin-bottom: 40px;
+      max-width: 480px;
     }
     
     .search-input {
       width: 100%;
-      max-width: 400px;
-      padding: 12px 16px;
+      padding: 14px 18px;
       font-family: var(--font-body);
-      font-size: 0.95rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--card);
+      font-size: 1rem;
+      border: 1.5px solid var(--border-soft);
+      border-radius: 10px;
+      background: var(--paper);
       color: var(--ink);
-      transition: border-color 150ms var(--ease), box-shadow 150ms var(--ease);
+      transition: border-color var(--duration-fast) var(--ease-out), 
+                  box-shadow var(--duration-fast) var(--ease-out),
+                  transform var(--duration-fast) var(--ease-out);
     }
     
     .search-input:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-light);
+      box-shadow: 0 0 0 4px var(--accent-light);
+    }
+    
+    .search-input:active {
+      transform: scale(0.995);
     }
     
     .search-input::placeholder {
-      color: var(--ink-muted);
+      color: var(--ink-tertiary);
     }
     
+    /* Article Grid */
     .list {
       display: grid;
-      gap: 16px;
+      gap: 20px;
     }
     
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
+      background: var(--paper);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 28px;
       display: grid;
-      gap: 16px;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow 150ms var(--ease), transform 150ms var(--ease);
+      gap: 20px;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--duration-fast) var(--ease-out),
+                  transform var(--duration-fast) var(--ease-out);
+      opacity: 0;
+      animation: cardMount var(--duration-slow) var(--ease-out forwards;
     }
+    
+    @keyframes cardMount {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Stagger cards */
+    .card:nth-child(1) { animation-delay: 30ms; }
+    .card:nth-child(2) { animation-delay: 60ms; }
+    .card:nth-child(3) { animation-delay: 90ms; }
+    .card:nth-child(4) { animation-delay: 120ms; }
+    .card:nth-child(5) { animation-delay: 150ms; }
+    .card:nth-child(6) { animation-delay: 180ms; }
+    .card:nth-child(n+7) { animation-delay: 210ms; }
     
     @media (hover: hover) {
       .card:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-3px);
       }
     }
     
@@ -116,77 +190,103 @@
       display: none;
     }
     
+    /* Card flowing on search filter */
+    .card.filtering {
+      animation: none;
+      transition: opacity var(--duration-base) var(--ease-out);
+    }
+    
     .meta {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
     
     .meta h2 {
-      margin: 0;
       font-family: var(--font-display);
-      font-size: 1.375rem;
+      font-size: clamp(1.5rem, 2.5vw, 1.875rem);
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.25;
       color: var(--ink);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      font-variation-settings: 'opsz' 72;
     }
     
     .date {
-      margin: 0;
-      color: var(--ink-muted);
-      font-size: 0.9rem;
+      color: var(--ink-tertiary);
+      font-size: 0.9375rem;
+      font-weight: 500;
     }
     
     .player-wrap {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     
     audio {
       width: 100%;
-      height: 40px;
-      border-radius: 6px;
+      height: 48px;
+      border-radius: 10px;
+      box-shadow: var(--shadow-card);
     }
     
     audio:focus {
       outline: 2px solid var(--accent);
-      outline-offset: 2px;
+      outline-offset: 3px;
     }
     
     .duration-hint {
-      color: var(--ink-muted);
-      font-size: 0.85rem;
-      font-style: italic;
+      color: var(--ink-tertiary);
+      font-size: 0.875rem;
+      font-weight: 500;
     }
     
+    /* Badge with spring entrance */
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
+      gap: 14px;
+      padding: 10px 14px;
       background: var(--accent-light);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.875rem;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      font-size: 0.9375rem;
       color: var(--accent-hover);
-      margin-top: 4px;
+      font-weight: 500;
+      margin-top: 8px;
+      opacity: 0;
+      animation: badgeMount var(--duration-base) var(--ease-spring) forwards;
+    }
+    
+    @keyframes badgeMount {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
     }
     
     .keep-btn {
-      padding: 8px 16px;
+      padding: 10px 20px;
       min-height: 44px;
-      min-width: 80px;
+      min-width: 88px;
       background: var(--accent);
-      color: var(--card);
+      color: var(--paper);
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-family: var(--font-body);
-      font-size: 0.9rem;
+      font-size: 0.9375rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 150ms var(--ease), transform 120ms var(--ease);
+      transition: background var(--duration-fast) var(--ease-out),
+                  transform var(--duration-fast) var(--ease-out),
+                  box-shadow var(--duration-fast) var(--ease-out);
+      box-shadow: var(--shadow-card);
       touch-action: manipulation;
     }
     
@@ -194,89 +294,226 @@
       .keep-btn:hover {
         background: var(--accent-hover);
         transform: translateY(-1px);
+        box-shadow: var(--shadow-press);
       }
     }
     
     .keep-btn:active {
-      transform: translateY(0);
+      transform: scale(0.98);
     }
     
     .keep-btn:focus {
       outline: 2px solid var(--accent);
-      outline-offset: 2px;
+      outline-offset: 3px;
     }
     
     .source-link {
-      color: var(--ink-muted);
+      color: var(--ink-tertiary);
       text-decoration: none;
-      font-size: 0.875rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      margin-top: 8px;
-      transition: color 150ms var(--ease);
+      gap: 6px;
+      margin-top: 12px;
+      transition: color var(--duration-fast) var(--ease-out);
+      position: relative;
+    }
+    
+    .source-link::after {
+      content: '↗';
+      opacity: 0.6;
+      transition: opacity var(--duration-fast) var(--ease-out),
+                  transform var(--duration-fast) var(--ease-out);
     }
     
     @media (hover: hover) {
       .source-link:hover {
-        color: var(--accent-hover);
+        color: var(--accent);
+      }
+      .source-link:hover::after {
+        opacity: 1;
+        transform: translate(2px, -2px);
       }
     }
     
     .source-link:focus {
       outline: 2px solid var(--accent);
-      outline-offset: 2px;
-      border-radius: 4px;
+      outline-offset: 3px;
+      border-radius: 6px;
     }
     
-    footer {
-      margin-top: 48px;
-      padding-top: 24px;
+    /* Now Playing Bar (Apple continuity) */
+    .now-playing {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--paper);
       border-top: 1px solid var(--border);
-      color: var(--ink-muted);
+      padding: 16px 20px;
+      box-shadow: 0 -4px 24px rgba(18, 18, 18, 0.08);
+      transform: translateY(100%);
+      transition: transform var(--duration-base) var(--ease-out);
+      z-index: 100;
+      opacity: 0;
+    }
+    
+    .now-playing.active {
+      transform: translateY(0);
+      opacity: 1;
+      animation: nowPlayingSlide var(--duration-base) var(--ease-out forwards;
+    }
+    
+    @keyframes nowPlayingSlide {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .now-playing-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .now-playing-title {
+      flex: 1;
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-variation-settings: 'opsz' 48;
+    }
+    
+    .now-playing-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--accent-light);
+      border-radius: 6px;
       font-size: 0.875rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    .now-playing-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+    
+    /* Footer */
+    footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-soft);
+      color: var(--ink-tertiary);
+      font-size: 0.9375rem;
       text-align: center;
     }
     
-    .empty-state {
-      padding: 48px 24px;
+    /* States */
+    .empty-state,
+    .loading {
+      padding: 80px 32px;
       text-align: center;
-      color: var(--ink-muted);
     }
     
     .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      opacity: 0.3;
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      opacity: 0.2;
     }
     
-    .loading {
-      padding: 48px 24px;
-      text-align: center;
-      color: var(--ink-muted);
+    .empty-state p,
+    .loading p {
+      color: var(--ink-secondary);
+      font-size: 1.125rem;
     }
     
+    /* Loading skeleton */
+    .skeleton {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .skeleton-card {
+      background: var(--paper);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 28px;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .skeleton-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(201, 104, 80, 0.04) 50%,
+        transparent 100%
+      );
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* Responsive */
     @media (min-width: 768px) {
       .wrap {
-        padding: 48px 24px 96px;
+        padding-left: 32px;
+        padding-right: 32px;
       }
       
-      header {
-        margin-bottom: 40px;
+      .hero {
+        padding: 80px 0 56px;
       }
       
       .card {
-        grid-template-columns: 1fr minmax(300px, 360px);
+        grid-template-columns: 1fr minmax(320px, 400px);
         align-items: start;
-        padding: 24px;
-        gap: 24px;
+        padding: 32px;
+        gap: 32px;
       }
       
-      .meta h2 {
-        font-size: 1.5rem;
+      .now-playing-inner {
+        padding: 0 12px;
       }
     }
     
+    @media (min-width: 1024px) {
+      .card {
+        padding: 36px;
+      }
+    }
+    
+    /* Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -285,31 +522,64 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
+      
+      .card {
+        opacity: 1;
+        transform: none;
+      }
+      
+      .badge {
+        opacity: 1;
+        transform: none;
+      }
+      
+      .now-playing.active {
+        animation: none;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <h1>Brownstone Audio (Bleeding Edge)</h1>
-      <p class="subtitle">Latest article narrations, newest first.</p>
-      <div class="search-wrap">
-        <input 
-          type="search" 
-          class="search-input" 
-          id="searchInput" 
-          placeholder="Filter by title..."
-          aria-label="Search articles"
-        />
-      </div>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Brownstone Audio</h1>
+      <p class="hero-promise">Listen to bleeding edge technology analysis, narrated daily.</p>
+      <p class="hero-count" id="heroCount">Loading archive...</p>
     </header>
     
+    <div class="search-wrap">
+      <input 
+        type="search" 
+        class="search-input" 
+        id="searchInput" 
+        placeholder="Search by title..."
+        aria-label="Search articles"
+      />
+    </div>
+    
     <section class="list" id="articleList" role="feed" aria-busy="true">
-      <div class="loading">Loading articles...</div>
+      <div class="loading">
+        <div class="skeleton">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
     </section>
     
     <footer>Auto-generated from the Brownstone monitor workflow.</footer>
-  </main>
+  </div>
+  
+  <!-- Now Playing Bar -->
+  <div class="now-playing" id="nowPlaying" role="complementary" aria-label="Now playing">
+    <div class="now-playing-inner">
+      <div class="now-playing-badge">
+        <div class="now-playing-pulse"></div>
+        <span>Playing</span>
+      </div>
+      <div class="now-playing-title" id="nowPlayingTitle"></div>
+    </div>
+  </div>
 
   <script>
     (async () => {
@@ -339,12 +609,24 @@
       const now = Date.now();
       const listEl = document.getElementById('articleList');
       const searchInput = document.getElementById('searchInput');
+      const heroCount = document.getElementById('heroCount');
+      const nowPlaying = document.getElementById('nowPlaying');
+      const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+      
+      // Update hero count
+      const validArticles = articles.filter(article => {
+        const listen = listens[article.slug];
+        const deleteAfter = listen?.delete_after;
+        return !deleteAfter || new Date(deleteAfter) >= now;
+      });
+      
+      heroCount.textContent = `${validArticles.length} narration${validArticles.length !== 1 ? 's' : ''} available`;
       
       // Clear loading state
       listEl.innerHTML = '';
       listEl.setAttribute('aria-busy', 'false');
       
-      if (articles.length === 0) {
+      if (validArticles.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'empty-state';
         empty.innerHTML = '<div class="empty-state-icon">♫</div><p>No articles available yet.</p>';
@@ -352,14 +634,14 @@
         return;
       }
       
+      // Track currently playing audio
+      let currentAudio = null;
+      
       // Render cards
-      for (const article of articles) {
+      for (const article of validArticles) {
         const listen = listens[article.slug];
         const heardAt = listen?.heard_at || heardLocal[article.slug];
         const deleteAfter = listen?.delete_after;
-        
-        // Skip cards that should already be deleted
-        if (deleteAfter && new Date(deleteAfter) < now) continue;
         
         const card = document.createElement('article');
         card.className = 'card';
@@ -421,8 +703,11 @@
               }
             }
             
-            // Remove badge
-            badge.remove();
+            // Remove badge with fade
+            badge.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
+            badge.style.opacity = '0';
+            badge.style.transform = 'scale(0.95)';
+            setTimeout(() => badge.remove(), 200);
           });
           
           badge.appendChild(badgeText);
@@ -435,7 +720,7 @@
         link.href = article.url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
-        link.innerHTML = 'Source <span aria-hidden="true">↗</span>';
+        link.textContent = 'Source';
         link.setAttribute('aria-label', `Read source article: ${article.title}`);
         
         meta.appendChild(link);
@@ -465,6 +750,26 @@
           durationHint.textContent = 'Audio unavailable';
         });
         
+        // Now Playing Bar interaction
+        audio.addEventListener('play', () => {
+          if (currentAudio && currentAudio !== audio) {
+            currentAudio.pause();
+          }
+          currentAudio = audio;
+          nowPlayingTitle.textContent = article.title;
+          nowPlaying.classList.add('active');
+        });
+        
+        audio.addEventListener('pause', () => {
+          if (currentAudio === audio && audio.ended) {
+            nowPlaying.classList.remove('active');
+          }
+        });
+        
+        audio.addEventListener('ended', () => {
+          nowPlaying.classList.remove('active');
+        });
+        
         // Track completion
         let completed = false;
         const markComplete = async () => {
@@ -477,7 +782,7 @@
           
           // Add badge immediately
           const existingBadge = meta.querySelector('.badge');
-          if (existingBadge) return; // Already has badge
+          if (existingBadge) return;
           
           const badge = document.createElement('div');
           badge.className = 'badge';
@@ -516,7 +821,10 @@
               }
             }
             
-            badge.remove();
+            badge.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
+            badge.style.opacity = '0';
+            badge.style.transform = 'scale(0.95)';
+            setTimeout(() => badge.remove(), 200);
           });
           
           badge.appendChild(badgeText);
@@ -567,32 +875,40 @@
         listEl.appendChild(card);
       }
       
-      // Search filter
+      // Search filter with opacity crossfade
+      let filterTimeout;
       searchInput.addEventListener('input', (e) => {
+        clearTimeout(filterTimeout);
+        
         const query = e.target.value.toLowerCase().trim();
         const cards = listEl.querySelectorAll('.card');
         
-        let visibleCount = 0;
-        cards.forEach(card => {
-          const title = card.dataset.title || '';
-          const matches = !query || title.includes(query);
-          card.hidden = !matches;
-          if (matches) visibleCount++;
-        });
+        // Add filtering class for smooth transitions
+        cards.forEach(card => card.classList.add('filtering'));
         
-        // Show/hide empty state
-        let emptyState = listEl.querySelector('.empty-state');
-        if (visibleCount === 0 && query) {
-          if (!emptyState) {
-            emptyState = document.createElement('div');
-            emptyState.className = 'empty-state';
-            emptyState.innerHTML = '<div class="empty-state-icon">🔍</div><p>No articles match your search.</p>';
-            listEl.appendChild(emptyState);
+        filterTimeout = setTimeout(() => {
+          let visibleCount = 0;
+          cards.forEach(card => {
+            const title = card.dataset.title || '';
+            const matches = !query || title.includes(query);
+            card.hidden = !matches;
+            if (matches) visibleCount++;
+          });
+          
+          // Show/hide empty state
+          let emptyState = listEl.querySelector('.empty-state');
+          if (visibleCount === 0 && query) {
+            if (!emptyState) {
+              emptyState = document.createElement('div');
+              emptyState.className = 'empty-state';
+              emptyState.innerHTML = '<div class="empty-state-icon">🔍</div><p>No articles match your search.</p>';
+              listEl.appendChild(emptyState);
+            }
+            emptyState.hidden = false;
+          } else if (emptyState) {
+            emptyState.hidden = true;
           }
-          emptyState.hidden = false;
-        } else if (emptyState) {
-          emptyState.hidden = true;
-        }
+        }, 100);
       });
     })();
   </script>
