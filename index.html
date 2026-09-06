@@ -6,35 +6,39 @@
   <title>Brownstone Audio (Bleeding Edge)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Design Tokens */
+    /* Design Tokens: Investor Signal Desk */
     :root {
-      /* Colors: Editorial Salon */
-      --field: #F9F6F1;
-      --paper: #FFFDFB;
-      --ink: #121212;
-      --ink-secondary: #4A4A4A;
-      --ink-tertiary: #878787;
-      --border-soft: #E8E3DC;
-      --border: #D4CFC6;
-      --accent: #C96850;
-      --accent-hover: #B35840;
-      --accent-light: #FDF5F3;
-      --shadow-card: 0 1px 3px rgba(18, 18, 18, 0.06);
-      --shadow-hover: 0 8px 24px rgba(18, 18, 18, 0.12);
-      --shadow-press: 0 2px 8px rgba(18, 18, 18, 0.1);
+      /* Colors: Cool, Technical */
+      --field: #F4F6F8;
+      --surface: #FFFFFF;
+      --ink: #0B1220;
+      --secondary: #3D4A5C;
+      --tertiary: #6B7280;
+      --line: rgba(11, 18, 32, 0.10);
+      --signal: #0B6E4F;
+      --signal-light: rgba(11, 110, 79, 0.08);
+      --warn: #B45309;
+      --warn-light: rgba(180, 83, 9, 0.08);
       
-      /* Typography: Fraunces (display) + DM Sans (body) */
-      --font-display: 'Fraunces', Georgia, serif;
-      --font-body: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+      /* Typography: Precision Sans + Mono */
+      --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
       
-      /* Motion */
+      /* Motion: Snappy, Technical */
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --duration-fast: 140ms;
-      --duration-base: 200ms;
-      --duration-slow: 280ms;
+      --fast: 150ms;
+      --base: 200ms;
+      --slow: 400ms;
+      
+      /* Spacing: 8px Rhythm */
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 40px;
+      --space-6: 48px;
     }
     
     * { 
@@ -44,146 +48,122 @@
     }
     
     body {
-      font-family: var(--font-body);
+      font-family: var(--font-sans);
       background: var(--field);
       color: var(--ink);
-      line-height: 1.6;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      position: relative;
-    }
-    
-    /* Subtle paper texture overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(201, 104, 80, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(201, 104, 80, 0.02) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
     }
     
     .wrap {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px 120px;
-      position: relative;
-      z-index: 1;
+      padding: 0 var(--space-2) var(--space-6);
     }
     
-    /* Hero: Thesis Statement */
+    /* Hero: Terminal Header */
     .hero {
-      padding: 64px 0 48px;
-      max-width: 720px;
+      padding: var(--space-4) 0 var(--space-3);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: var(--space-3);
     }
     
     .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      color: var(--ink);
-      margin-bottom: 16px;
-      font-variation-settings: 'opsz' 144;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0.05em;
+      color: var(--secondary);
+      margin-bottom: var(--space-1);
+      text-transform: uppercase;
     }
     
     .hero-promise {
-      font-size: clamp(1.125rem, 2vw, 1.375rem);
-      color: var(--ink-secondary);
-      margin-bottom: 12px;
-      font-weight: 400;
-      line-height: 1.5;
+      font-size: 1.125rem;
+      color: var(--ink);
+      margin-bottom: var(--space-1);
+      font-weight: 500;
+      line-height: 1.4;
     }
     
     .hero-count {
-      font-size: 0.9375rem;
-      color: var(--ink-tertiary);
-      font-weight: 500;
-      letter-spacing: 0.02em;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--tertiary);
+      font-weight: 400;
+      letter-spacing: 0.01em;
     }
     
     /* Search */
     .search-wrap {
-      margin-bottom: 40px;
-      max-width: 480px;
+      margin-bottom: var(--space-3);
+      max-width: 400px;
     }
     
     .search-input {
       width: 100%;
-      padding: 14px 18px;
-      font-family: var(--font-body);
-      font-size: 1rem;
-      border: 1.5px solid var(--border-soft);
-      border-radius: 10px;
-      background: var(--paper);
+      padding: 10px 12px;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
       color: var(--ink);
-      transition: border-color var(--duration-fast) var(--ease-out), 
-                  box-shadow var(--duration-fast) var(--ease-out),
-                  transform var(--duration-fast) var(--ease-out);
+      transition: border-color var(--fast) var(--ease-out), 
+                  box-shadow var(--fast) var(--ease-out);
     }
     
     .search-input:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px var(--accent-light);
-    }
-    
-    .search-input:active {
-      transform: scale(0.995);
+      border-color: var(--signal);
+      box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.15);
     }
     
     .search-input::placeholder {
-      color: var(--ink-tertiary);
+      color: var(--tertiary);
     }
     
     /* Article Grid */
     .list {
       display: grid;
-      gap: 20px;
+      gap: 1px;
+      background: var(--line);
     }
     
     .card {
-      background: var(--paper);
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      padding: 28px;
+      background: var(--surface);
+      border-left: 3px solid transparent;
+      padding: var(--space-2);
       display: grid;
-      gap: 20px;
-      box-shadow: var(--shadow-card);
-      transition: box-shadow var(--duration-fast) var(--ease-out),
-                  transform var(--duration-fast) var(--ease-out);
+      gap: var(--space-2);
+      transition: border-color var(--base) var(--ease-out);
       opacity: 0;
-      animation: cardMount var(--duration-slow) var(--ease-out) forwards;
+      animation: cardMount var(--slow) var(--ease-out);
+      animation-fill-mode: forwards;
     }
     
     @keyframes cardMount {
       from {
         opacity: 0;
-        transform: translateY(12px);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
       }
     }
     
     /* Stagger cards */
-    .card:nth-child(1) { animation-delay: 30ms; }
-    .card:nth-child(2) { animation-delay: 60ms; }
-    .card:nth-child(3) { animation-delay: 90ms; }
-    .card:nth-child(4) { animation-delay: 120ms; }
-    .card:nth-child(5) { animation-delay: 150ms; }
-    .card:nth-child(6) { animation-delay: 180ms; }
-    .card:nth-child(n+7) { animation-delay: 210ms; }
+    .card:nth-child(1) { animation-delay: 0ms; }
+    .card:nth-child(2) { animation-delay: 30ms; }
+    .card:nth-child(3) { animation-delay: 60ms; }
+    .card:nth-child(4) { animation-delay: 90ms; }
+    .card:nth-child(5) { animation-delay: 120ms; }
+    .card:nth-child(6) { animation-delay: 150ms; }
+    .card:nth-child(n+7) { animation-delay: 180ms; }
     
-    @media (hover: hover) {
-      .card:hover {
-        box-shadow: var(--shadow-hover);
-        transform: translateY(-3px);
-      }
+    .card.active-track {
+      border-left-color: var(--signal);
     }
     
     .card[hidden] {
@@ -193,275 +173,277 @@
     /* Card flowing on search filter */
     .card.filtering {
       animation: none;
-      transition: opacity var(--duration-base) var(--ease-out);
+      transition: opacity var(--base) var(--ease-out);
     }
     
     .meta {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    
-    .meta h2 {
-      font-family: var(--font-display);
-      font-size: clamp(1.5rem, 2.5vw, 1.875rem);
-      font-weight: 600;
-      line-height: 1.25;
-      color: var(--ink);
-      letter-spacing: -0.02em;
-      margin-bottom: 4px;
-      font-variation-settings: 'opsz' 72;
+      gap: var(--space-1);
     }
     
     .date {
-      color: var(--ink-tertiary);
-      font-size: 0.9375rem;
-      font-weight: 500;
+      font-family: var(--font-mono);
+      color: var(--tertiary);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    
+    .meta h2 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    
+    .meta h2.heard {
+      color: var(--secondary);
     }
     
     .player-wrap {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: var(--space-1);
     }
     
     audio {
       width: 100%;
-      height: 48px;
-      border-radius: 10px;
-      box-shadow: var(--shadow-card);
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
     }
     
     audio:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
+      outline: 2px solid var(--signal);
+      outline-offset: 2px;
     }
     
     .duration-hint {
-      color: var(--ink-tertiary);
-      font-size: 0.875rem;
-      font-weight: 500;
+      font-family: var(--font-mono);
+      color: var(--tertiary);
+      font-size: 0.75rem;
+      font-weight: 400;
     }
     
-    /* Badge with spring entrance */
+    /* Badge: Heard chip */
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 14px;
-      padding: 10px 14px;
-      background: var(--accent-light);
-      border: 1px solid var(--border-soft);
-      border-radius: 10px;
-      font-size: 0.9375rem;
-      color: var(--accent-hover);
+      gap: var(--space-1);
+      padding: 6px 10px;
+      background: var(--signal-light);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--signal);
       font-weight: 500;
-      margin-top: 8px;
+      margin-top: var(--space-1);
       opacity: 0;
-      animation: badgeMount var(--duration-base) var(--ease-spring) forwards;
+      animation: badgeMount var(--fast) var(--ease-out);
+      animation-fill-mode: forwards;
     }
     
     @keyframes badgeMount {
       from {
         opacity: 0;
-        transform: scale(0.92) translateY(-4px);
       }
       to {
         opacity: 1;
-        transform: scale(1) translateY(0);
       }
     }
     
     .keep-btn {
-      padding: 10px 20px;
-      min-height: 44px;
-      min-width: 88px;
-      background: var(--accent);
-      color: var(--paper);
+      padding: 6px 12px;
+      min-height: 32px;
+      background: var(--warn);
+      color: var(--surface);
       border: none;
       border-radius: 8px;
-      font-family: var(--font-body);
-      font-size: 0.9375rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background var(--duration-fast) var(--ease-out),
-                  transform var(--duration-fast) var(--ease-out),
-                  box-shadow var(--duration-fast) var(--ease-out);
-      box-shadow: var(--shadow-card);
+      transition: background var(--base) var(--ease-out),
+                  opacity var(--base) var(--ease-out);
       touch-action: manipulation;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
     
     @media (hover: hover) {
       .keep-btn:hover {
-        background: var(--accent-hover);
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-press);
+        background: #9A4508;
       }
     }
     
     .keep-btn:active {
-      transform: scale(0.98);
+      opacity: 0.8;
     }
     
     .keep-btn:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
+      outline: 2px solid var(--warn);
+      outline-offset: 2px;
     }
     
     .source-link {
-      color: var(--ink-tertiary);
+      color: var(--tertiary);
       text-decoration: none;
-      font-size: 0.9375rem;
-      font-weight: 500;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 400;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 12px;
-      transition: color var(--duration-fast) var(--ease-out);
-      position: relative;
+      gap: 4px;
+      margin-top: var(--space-1);
+      transition: color var(--fast) var(--ease-out),
+                  border-color var(--base) var(--ease-out);
+      border-radius: 6px;
+      padding: 4px 8px;
+      border: 1px solid transparent;
     }
     
     .source-link::after {
       content: '↗';
       opacity: 0.6;
-      transition: opacity var(--duration-fast) var(--ease-out),
-                  transform var(--duration-fast) var(--ease-out);
+      transition: opacity var(--fast) var(--ease-out);
     }
     
     @media (hover: hover) {
       .source-link:hover {
-        color: var(--accent);
+        color: var(--signal);
       }
       .source-link:hover::after {
         opacity: 1;
-        transform: translate(2px, -2px);
       }
     }
     
     .source-link:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-      border-radius: 6px;
+      outline: none;
+      border-color: var(--signal);
     }
     
-    /* Now Playing Bar (Apple continuity) */
-    .now-playing {
+    .source-link.flash {
+      border-color: var(--signal);
+      animation: sourceFlash 120ms var(--ease-out);
+    }
+    
+    @keyframes sourceFlash {
+      0%, 100% { border-color: var(--signal); }
+      50% { border-color: transparent; }
+    }
+    
+    /* Session Strip: Live Brief */
+    .session-strip {
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
       right: 0;
-      background: var(--paper);
-      border-top: 1px solid var(--border);
-      padding: 16px 20px;
-      box-shadow: 0 -4px 24px rgba(18, 18, 18, 0.08);
-      transform: translateY(100%);
-      transition: transform var(--duration-base) var(--ease-out);
+      background: var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding: 8px var(--space-2);
       z-index: 100;
       opacity: 0;
+      transform: translateY(-100%);
+      transition: opacity var(--base) var(--ease-out),
+                  transform var(--base) var(--ease-out);
     }
     
-    .now-playing.active {
-      transform: translateY(0);
+    .session-strip.active {
       opacity: 1;
-      animation: nowPlayingSlide var(--duration-base) var(--ease-out) forwards;
+      transform: translateY(0);
     }
     
-    @keyframes nowPlayingSlide {
-      from {
-        transform: translateY(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    
-    .now-playing-inner {
-      max-width: 1100px;
+    .session-strip-inner {
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: var(--space-2);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--surface);
     }
     
-    .now-playing-title {
-      flex: 1;
-      font-family: var(--font-display);
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--ink);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-variation-settings: 'opsz' 48;
-    }
-    
-    .now-playing-badge {
+    .session-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      background: var(--accent-light);
-      border-radius: 6px;
-      font-size: 0.875rem;
-      color: var(--accent);
+      gap: 6px;
       font-weight: 600;
+      letter-spacing: 0.05em;
     }
     
-    .now-playing-pulse {
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
+    .session-pulse {
+      width: 6px;
+      height: 6px;
+      background: var(--signal);
       border-radius: 50%;
       animation: pulse 1.8s ease-in-out infinite;
     }
     
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(0.9); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    .session-time {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .session-title {
+      flex: 1;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgba(255, 255, 255, 0.9);
     }
     
     /* Footer */
     footer {
-      margin-top: 80px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border-soft);
-      color: var(--ink-tertiary);
-      font-size: 0.9375rem;
+      margin-top: var(--space-6);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--line);
+      color: var(--tertiary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
       text-align: center;
     }
     
     /* States */
     .empty-state,
     .loading {
-      padding: 80px 32px;
+      padding: var(--space-6) var(--space-3);
       text-align: center;
     }
     
     .empty-state-icon {
-      font-size: 3.5rem;
-      margin-bottom: 20px;
-      opacity: 0.2;
+      font-size: 2.5rem;
+      margin-bottom: var(--space-2);
+      opacity: 0.15;
     }
     
     .empty-state p,
     .loading p {
-      color: var(--ink-secondary);
-      font-size: 1.125rem;
+      color: var(--secondary);
+      font-size: 0.875rem;
     }
     
     /* Loading skeleton */
     .skeleton {
       display: grid;
-      gap: 20px;
+      gap: 1px;
+      background: var(--line);
     }
     
     .skeleton-card {
-      background: var(--paper);
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      padding: 28px;
-      height: 180px;
+      background: var(--surface);
+      padding: var(--space-2);
+      height: 120px;
       position: relative;
       overflow: hidden;
     }
@@ -473,7 +455,7 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(201, 104, 80, 0.04) 50%,
+        rgba(11, 110, 79, 0.03) 50%,
         transparent 100%
       );
       animation: shimmer 2s infinite;
@@ -487,29 +469,25 @@
     /* Responsive */
     @media (min-width: 768px) {
       .wrap {
-        padding-left: 32px;
-        padding-right: 32px;
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
       }
       
       .hero {
-        padding: 80px 0 56px;
+        padding: var(--space-5) 0 var(--space-4);
       }
       
       .card {
-        grid-template-columns: 1fr minmax(320px, 400px);
+        grid-template-columns: 1fr 320px;
         align-items: start;
-        padding: 32px;
-        gap: 32px;
-      }
-      
-      .now-playing-inner {
-        padding: 0 12px;
+        padding: var(--space-3);
+        gap: var(--space-3);
       }
     }
     
     @media (min-width: 1024px) {
       .card {
-        padding: 36px;
+        padding: var(--space-3) var(--space-4);
       }
     }
     
@@ -525,15 +503,13 @@
       
       .card {
         opacity: 1;
-        transform: none;
       }
       
       .badge {
         opacity: 1;
-        transform: none;
       }
       
-      .now-playing.active {
+      .session-strip.active {
         animation: none;
       }
     }
@@ -542,8 +518,8 @@
 <body>
   <div class="wrap">
     <header class="hero">
-      <h1>Brownstone Audio</h1>
-      <p class="hero-promise">Listen to bleeding edge technology analysis, narrated daily.</p>
+      <h1>BLEEDING EDGE · ARCHIVE</h1>
+      <p class="hero-promise">Daily narrated research. Signal first.</p>
       <p class="hero-count" id="heroCount">Loading archive...</p>
     </header>
     
@@ -552,7 +528,7 @@
         type="search" 
         class="search-input" 
         id="searchInput" 
-        placeholder="Search by title..."
+        placeholder="Filter by title"
         aria-label="Search articles"
       />
     </div>
@@ -570,14 +546,15 @@
     <footer>Auto-generated from the Brownstone monitor workflow.</footer>
   </div>
   
-  <!-- Now Playing Bar -->
-  <div class="now-playing" id="nowPlaying" role="complementary" aria-label="Now playing">
-    <div class="now-playing-inner">
-      <div class="now-playing-badge">
-        <div class="now-playing-pulse"></div>
-        <span>Playing</span>
+  <!-- Session Strip: Live Brief -->
+  <div class="session-strip" id="sessionStrip" role="complementary" aria-label="Live session">
+    <div class="session-strip-inner">
+      <div class="session-badge">
+        <div class="session-pulse"></div>
+        <span>LIVE BRIEF</span>
       </div>
-      <div class="now-playing-title" id="nowPlayingTitle"></div>
+      <div class="session-time" id="sessionTime"></div>
+      <div class="session-title" id="sessionTitle"></div>
     </div>
   </div>
 
@@ -610,8 +587,11 @@
       const listEl = document.getElementById('articleList');
       const searchInput = document.getElementById('searchInput');
       const heroCount = document.getElementById('heroCount');
-      const nowPlaying = document.getElementById('nowPlaying');
-      const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+      const sessionStrip = document.getElementById('sessionStrip');
+      const sessionTime = document.getElementById('sessionTime');
+      const sessionTitle = document.getElementById('sessionTitle');
+      
+      let sessionStartTime = null;
       
       // Update hero count
       const validArticles = articles.filter(article => {
@@ -620,7 +600,7 @@
         return !deleteAfter || new Date(deleteAfter) >= now;
       });
       
-      heroCount.textContent = `${validArticles.length} narration${validArticles.length !== 1 ? 's' : ''} available`;
+      heroCount.textContent = `${validArticles.length} tracks available`;
       
       // Clear loading state
       listEl.innerHTML = '';
@@ -629,13 +609,14 @@
       if (validArticles.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'empty-state';
-        empty.innerHTML = '<div class="empty-state-icon">♫</div><p>No articles available yet.</p>';
+        empty.innerHTML = '<div class="empty-state-icon">●</div><p>No tracks available</p>';
         listEl.appendChild(empty);
         return;
       }
       
       // Track currently playing audio
       let currentAudio = null;
+      let currentCard = null;
       
       // Render cards
       for (const article of validArticles) {
@@ -651,15 +632,15 @@
         const meta = document.createElement('div');
         meta.className = 'meta';
         
+        const date = document.createElement('p');
+        date.className = 'date';
+        date.textContent = article.date.toUpperCase();
+        
         const title = document.createElement('h2');
         title.textContent = article.title;
         
-        const date = document.createElement('p');
-        date.className = 'date';
-        date.textContent = article.date;
-        
-        meta.appendChild(title);
         meta.appendChild(date);
+        meta.appendChild(title);
         
         // Add badge if heard
         if (heardAt) {
@@ -669,11 +650,11 @@
           badge.setAttribute('aria-live', 'polite');
           
           const badgeText = document.createElement('span');
-          badgeText.textContent = 'Heard · deletes in 3 days';
+          badgeText.textContent = '✓ HEARD (DELETES 3D)';
           
           const keepBtn = document.createElement('button');
           keepBtn.className = 'keep-btn';
-          keepBtn.textContent = 'Keep';
+          keepBtn.textContent = 'KEEP';
           keepBtn.setAttribute('aria-label', `Keep ${article.title}`);
           
           keepBtn.addEventListener('click', async (e) => {
@@ -720,8 +701,18 @@
         link.href = article.url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
-        link.textContent = 'Source';
+        link.textContent = 'SOURCE';
         link.setAttribute('aria-label', `Read source article: ${article.title}`);
+        
+        // Source flash on open
+        link.addEventListener('click', (e) => {
+          card.style.borderLeftColor = 'var(--signal)';
+          setTimeout(() => {
+            if (card !== currentCard) {
+              card.style.borderLeftColor = 'transparent';
+            }
+          }, 400);
+        });
         
         meta.appendChild(link);
         
@@ -736,38 +727,64 @@
         
         const durationHint = document.createElement('div');
         durationHint.className = 'duration-hint';
-        durationHint.textContent = 'Loading...';
+        durationHint.textContent = '...';
         
         // Update duration hint when metadata loads
         audio.addEventListener('loadedmetadata', () => {
           const duration = Math.floor(audio.duration);
           const minutes = Math.floor(duration / 60);
           const seconds = duration % 60;
-          durationHint.textContent = `Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+          durationHint.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         });
         
         audio.addEventListener('error', () => {
-          durationHint.textContent = 'Audio unavailable';
+          durationHint.textContent = 'n/a';
         });
         
-        // Now Playing Bar interaction
+        // Session Strip: First play activates, shows current track
         audio.addEventListener('play', () => {
           if (currentAudio && currentAudio !== audio) {
             currentAudio.pause();
+            if (currentCard) {
+              currentCard.classList.remove('active-track');
+            }
           }
           currentAudio = audio;
-          nowPlayingTitle.textContent = article.title;
-          nowPlaying.classList.add('active');
+          currentCard = card;
+          
+          // Active track accent rail
+          card.classList.add('active-track');
+          
+          // Start session on first play
+          if (!sessionStartTime) {
+            sessionStartTime = Date.now();
+            sessionStrip.classList.add('active');
+            
+            // Update time every second
+            const updateTime = () => {
+              if (!sessionStartTime) return;
+              const now = new Date();
+              const hours = now.getHours().toString().padStart(2, '0');
+              const minutes = now.getMinutes().toString().padStart(2, '0');
+              sessionTime.textContent = `${hours}:${minutes}`;
+              setTimeout(updateTime, 1000);
+            };
+            updateTime();
+          }
+          
+          sessionTitle.textContent = article.title;
         });
         
         audio.addEventListener('pause', () => {
-          if (currentAudio === audio && audio.ended) {
-            nowPlaying.classList.remove('active');
+          if (currentAudio === audio && !audio.ended) {
+            card.classList.remove('active-track');
           }
         });
         
         audio.addEventListener('ended', () => {
-          nowPlaying.classList.remove('active');
+          // Dim finished title
+          title.classList.add('heard');
+          card.classList.remove('active-track');
         });
         
         // Track completion
@@ -790,11 +807,11 @@
           badge.setAttribute('aria-live', 'polite');
           
           const badgeText = document.createElement('span');
-          badgeText.textContent = 'Heard · deletes in 3 days';
+          badgeText.textContent = '✓ HEARD (DELETES 3D)';
           
           const keepBtn = document.createElement('button');
           keepBtn.className = 'keep-btn';
-          keepBtn.textContent = 'Keep';
+          keepBtn.textContent = 'KEEP';
           keepBtn.setAttribute('aria-label', `Keep ${article.title}`);
           
           keepBtn.addEventListener('click', async (e) => {
@@ -901,7 +918,7 @@
             if (!emptyState) {
               emptyState = document.createElement('div');
               emptyState.className = 'empty-state';
-              emptyState.innerHTML = '<div class="empty-state-icon">🔍</div><p>No articles match your search.</p>';
+              emptyState.innerHTML = '<div class="empty-state-icon">○</div><p>No matches</p>';
               listEl.appendChild(emptyState);
             }
             emptyState.hidden = false;
