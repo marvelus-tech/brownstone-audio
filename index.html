@@ -3,931 +3,271 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Brownstone Audio (Bleeding Edge)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Brownstone Audio — Bleeding Edge</title>
   <style>
-    /* Design Tokens: Investor Signal Desk */
     :root {
-      /* Colors: Cool, Technical */
-      --field: #F4F6F8;
-      --surface: #FFFFFF;
-      --ink: #0B1220;
-      --secondary: #3D4A5C;
-      --tertiary: #6B7280;
-      --line: rgba(11, 18, 32, 0.10);
-      --signal: #0B6E4F;
-      --signal-light: rgba(11, 110, 79, 0.08);
-      --warn: #B45309;
-      --warn-light: rgba(180, 83, 9, 0.08);
-      
-      /* Typography: Precision Sans + Mono */
-      --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-      --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
-      
-      /* Motion: Snappy, Technical */
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --fast: 150ms;
-      --base: 200ms;
-      --slow: 400ms;
-      
-      /* Spacing: 8px Rhythm */
-      --space-1: 8px;
-      --space-2: 16px;
-      --space-3: 24px;
-      --space-4: 32px;
-      --space-5: 40px;
-      --space-6: 48px;
+      --bg: #070b14;
+      --panel: #111827;
+      --border: #1f2a44;
+      --text: #e6edf7;
+      --muted: #94a3b8;
+      --accent: #14f195;
     }
-    
-    * { 
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
+    * { box-sizing: border-box; }
     body {
-      font-family: var(--font-sans);
-      background: var(--field);
-      color: var(--ink);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 600px at 80% -20%, #1f2952 0%, transparent 60%), var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
-    
-    .wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 var(--space-2) var(--space-6);
-    }
-    
-    /* Hero: Terminal Header */
-    .hero {
-      padding: var(--space-4) 0 var(--space-3);
-      border-bottom: 1px solid var(--line);
-      margin-bottom: var(--space-3);
-    }
-    
-    .hero h1 {
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-      font-weight: 600;
-      line-height: 1;
-      letter-spacing: 0.05em;
-      color: var(--secondary);
-      margin-bottom: var(--space-1);
-      text-transform: uppercase;
-    }
-    
-    .hero-promise {
-      font-size: 1.125rem;
-      color: var(--ink);
-      margin-bottom: var(--space-1);
-      font-weight: 500;
-      line-height: 1.4;
-    }
-    
-    .hero-count {
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-      color: var(--tertiary);
-      font-weight: 400;
-      letter-spacing: 0.01em;
-    }
-    
-    /* Search */
-    .search-wrap {
-      margin-bottom: var(--space-3);
-      max-width: 400px;
-    }
-    
-    .search-input {
-      width: 100%;
-      padding: 10px 12px;
-      font-family: var(--font-sans);
-      font-size: 0.875rem;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-      color: var(--ink);
-      transition: border-color var(--fast) var(--ease-out), 
-                  box-shadow var(--fast) var(--ease-out);
-    }
-    
-    .search-input:focus {
-      outline: none;
-      border-color: var(--signal);
-      box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.15);
-    }
-    
-    .search-input::placeholder {
-      color: var(--tertiary);
-    }
-    
-    /* Article Grid */
-    .list {
-      display: grid;
-      gap: 1px;
-      background: var(--line);
-    }
-    
+    .wrap { max-width: 920px; margin: 0 auto; padding: 24px 16px 56px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.5rem, 2.4vw, 2rem); }
+    .sub { color: var(--muted); margin-bottom: 20px; }
+    .list { display: grid; gap: 12px; }
     .card {
-      background: var(--surface);
-      border-left: 3px solid transparent;
-      padding: var(--space-2);
+      background: linear-gradient(180deg, rgba(17,24,39,0.92), rgba(13,18,32,0.92));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
       display: grid;
-      gap: var(--space-2);
-      transition: border-color var(--base) var(--ease-out);
-      opacity: 0;
-      animation: cardMount var(--slow) var(--ease-out);
-      animation-fill-mode: forwards;
+      gap: 10px;
     }
-    
-    @keyframes cardMount {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
-    /* Stagger cards */
-    .card:nth-child(1) { animation-delay: 0ms; }
-    .card:nth-child(2) { animation-delay: 30ms; }
-    .card:nth-child(3) { animation-delay: 60ms; }
-    .card:nth-child(4) { animation-delay: 90ms; }
-    .card:nth-child(5) { animation-delay: 120ms; }
-    .card:nth-child(6) { animation-delay: 150ms; }
-    .card:nth-child(n+7) { animation-delay: 180ms; }
-    
-    .card.active-track {
-      border-left-color: var(--signal);
-    }
-    
-    .card[hidden] {
-      display: none;
-    }
-    
-    /* Card flowing on search filter */
-    .card.filtering {
-      animation: none;
-      transition: opacity var(--base) var(--ease-out);
-    }
-    
-    .meta {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-    
-    .date {
-      font-family: var(--font-mono);
-      color: var(--tertiary);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-    
-    .meta h2 {
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.4;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-    }
-    
-    .meta h2.heard {
-      color: var(--secondary);
-    }
-    
-    .player-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-    
-    audio {
-      width: 100%;
-      height: 40px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-    }
-    
-    audio:focus {
-      outline: 2px solid var(--signal);
-      outline-offset: 2px;
-    }
-    
-    .duration-hint {
-      font-family: var(--font-mono);
-      color: var(--tertiary);
-      font-size: 0.75rem;
-      font-weight: 400;
-    }
-    
-    /* Badge: Heard chip */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      padding: 6px 10px;
-      background: var(--signal-light);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--signal);
-      font-weight: 500;
-      margin-top: var(--space-1);
-      opacity: 0;
-      animation: badgeMount var(--fast) var(--ease-out);
-      animation-fill-mode: forwards;
-    }
-    
-    @keyframes badgeMount {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
-    .keep-btn {
-      padding: 6px 12px;
-      min-height: 32px;
-      background: var(--warn);
-      color: var(--surface);
-      border: none;
-      border-radius: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background var(--base) var(--ease-out),
-                  opacity var(--base) var(--ease-out);
-      touch-action: manipulation;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-    
-    @media (hover: hover) {
-      .keep-btn:hover {
-        background: #9A4508;
-      }
-    }
-    
-    .keep-btn:active {
-      opacity: 0.8;
-    }
-    
-    .keep-btn:focus {
-      outline: 2px solid var(--warn);
-      outline-offset: 2px;
-    }
-    
-    .source-link {
-      color: var(--tertiary);
-      text-decoration: none;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 400;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: var(--space-1);
-      transition: color var(--fast) var(--ease-out),
-                  border-color var(--base) var(--ease-out);
-      border-radius: 6px;
-      padding: 4px 8px;
-      border: 1px solid transparent;
-    }
-    
-    .source-link::after {
-      content: '↗';
-      opacity: 0.6;
-      transition: opacity var(--fast) var(--ease-out);
-    }
-    
-    @media (hover: hover) {
-      .source-link:hover {
-        color: var(--signal);
-      }
-      .source-link:hover::after {
-        opacity: 1;
-      }
-    }
-    
-    .source-link:focus {
-      outline: none;
-      border-color: var(--signal);
-    }
-    
-    .source-link.flash {
-      border-color: var(--signal);
-      animation: sourceFlash 120ms var(--ease-out);
-    }
-    
-    @keyframes sourceFlash {
-      0%, 100% { border-color: var(--signal); }
-      50% { border-color: transparent; }
-    }
-    
-    /* Session Strip: Live Brief */
-    .session-strip {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: var(--ink);
-      border-bottom: 1px solid var(--line);
-      padding: 8px var(--space-2);
-      z-index: 100;
-      opacity: 0;
-      transform: translateY(-100%);
-      transition: opacity var(--base) var(--ease-out),
-                  transform var(--base) var(--ease-out);
-    }
-    
-    .session-strip.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    .session-strip-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--surface);
-    }
-    
-    .session-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-    
-    .session-pulse {
-      width: 6px;
-      height: 6px;
-      background: var(--signal);
-      border-radius: 50%;
-      animation: pulse 1.8s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    
-    .session-time {
-      color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .session-title {
-      flex: 1;
-      font-weight: 400;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    
-    /* Footer */
-    footer {
-      margin-top: var(--space-6);
-      padding-top: var(--space-3);
-      border-top: 1px solid var(--line);
-      color: var(--tertiary);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      text-align: center;
-    }
-    
-    /* States */
-    .empty-state,
-    .loading {
-      padding: var(--space-6) var(--space-3);
-      text-align: center;
-    }
-    
-    .empty-state-icon {
-      font-size: 2.5rem;
-      margin-bottom: var(--space-2);
-      opacity: 0.15;
-    }
-    
-    .empty-state p,
-    .loading p {
-      color: var(--secondary);
-      font-size: 0.875rem;
-    }
-    
-    /* Loading skeleton */
-    .skeleton {
-      display: grid;
-      gap: 1px;
-      background: var(--line);
-    }
-    
-    .skeleton-card {
-      background: var(--surface);
-      padding: var(--space-2);
-      height: 120px;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .skeleton-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(11, 110, 79, 0.03) 50%,
-        transparent 100%
-      );
-      animation: shimmer 2s infinite;
-    }
-    
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    
-    /* Responsive */
-    @media (min-width: 768px) {
-      .wrap {
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
-      }
-      
-      .hero {
-        padding: var(--space-5) 0 var(--space-4);
-      }
-      
-      .card {
-        grid-template-columns: 1fr 320px;
-        align-items: start;
-        padding: var(--space-3);
-        gap: var(--space-3);
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .card {
-        padding: var(--space-3) var(--space-4);
-      }
-    }
-    
-    /* Reduced Motion */
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-      
-      .card {
-        opacity: 1;
-      }
-      
-      .badge {
-        opacity: 1;
-      }
-      
-      .session-strip.active {
-        animation: none;
-      }
+    .meta h2 { margin: 0 0 4px; font-size: 1rem; line-height: 1.35; }
+    .meta p { margin: 0; color: var(--muted); font-size: .92rem; }
+    .src { color: var(--accent); text-decoration: none; font-size: .88rem; display: inline-block; margin-top: 6px; }
+    audio { width: 100%; }
+    footer { margin-top: 18px; color: var(--muted); font-size: .84rem; }
+    @media (min-width: 700px) {
+      .card { grid-template-columns: 1fr minmax(260px, 340px); align-items: center; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="hero">
-      <h1>BLEEDING EDGE · ARCHIVE</h1>
-      <p class="hero-promise">Daily narrated research. Signal first.</p>
-      <p class="hero-count" id="heroCount">Loading archive...</p>
-    </header>
-    
-    <div class="search-wrap">
-      <input 
-        type="search" 
-        class="search-input" 
-        id="searchInput" 
-        placeholder="Filter by title"
-        aria-label="Search articles"
-      />
-    </div>
-    
-    <section class="list" id="articleList" role="feed" aria-busy="true">
-      <div class="loading">
-        <div class="skeleton">
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-        </div>
-      </div>
+  <main class="wrap">
+    <h1>Brownstone Audio — Bleeding Edge</h1>
+    <p class="sub">Latest article narrations, newest first.</p>
+    <section class="list">
+      <article class="card">
+  <div class="meta">
+    <h2>The “Trust Machines” of the Financial System</h2>
+    <p>Sep 4, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-trust-machines-of-the-financial-system/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-trust-machines-of-the-financial-system.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Jackson Hole Takeaways on the Onchain Future of Finance</h2>
+    <p>Sep 1, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/jackson-hole-takeaways-on-the-onchain-future-of-finance/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/jackson-hole-takeaways-on-the-onchain-future-of-finance.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Unpacking the “Chip System”</h2>
+    <p>Aug 31, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/unpacking-the-chip-system/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/unpacking-the-chip-system.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Pecan Island Will Become the Largest Spaceport in History</h2>
+    <p>Aug 28, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/pecan-island-will-become-the-largest-spaceport-in-history/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/pecan-island-will-become-the-largest-spaceport-in-history.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>NVIDIA Delivers Blockbuster Results Again</h2>
+    <p>Aug 27, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/nvidia-delivers-blockbuster-results-again/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/nvidia-delivers-blockbuster-results-again.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Redefining Our Idea of “Money”</h2>
+    <p>Aug 26, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/redefining-our-idea-of-money/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/redefining-our-idea-of-money.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Grid Said No… So Amazon Built Its Own Power Plant</h2>
+    <p>Aug 25, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-grid-said-no-so-amazon-built-its-own-power-plant/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-grid-said-no-so-amazon-built-its-own-power-plant.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Bessent’s Move Is Priming Crypto for October</h2>
+    <p>Aug 24, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/bessents-move-is-priming-crypto-for-october/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/bessents-move-is-priming-crypto-for-october.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The AI Boom Needs This Critical Metal</h2>
+    <p>Aug 21, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-ai-boom-needs-this-critical-metal/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-ai-boom-needs-this-critical-metal.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>A Cure for Cancer?</h2>
+    <p>Aug 20, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/a-cure-for-cancer/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/a-cure-for-cancer.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The AI Profit Gap Has Appeared</h2>
+    <p>Aug 19, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-ai-profit-gap-has-appeared/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-ai-profit-gap-has-appeared.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Blockchain With a “Brain”</h2>
+    <p>Aug 19, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/blockchain-with-a-brain/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/blockchain-with-a-brain.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Shedding Light on the New AI Bottleneck</h2>
+    <p>Aug 18, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/shedding-light-on-the-new-ai-bottleneck/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/shedding-light-on-the-new-ai-bottleneck.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Why the Crypto Market Is Bullish… Even Without CLARITY</h2>
+    <p>Aug 17, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/why-the-crypto-market-is-bullish-even-without-clarity/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/why-the-crypto-market-is-bullish-even-without-clarity.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Resource Supercycle</h2>
+    <p>Aug 13, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-resource-supercycle/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-resource-supercycle.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Next Great Security Build Has Begun</h2>
+    <p>Aug 12, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-next-great-security-build-has-begun/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-next-great-security-build-has-begun.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>What’s Next for the CLARITY Act</h2>
+    <p>Aug 12, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/whats-next-for-the-clarity-act/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/whats-next-for-the-clarity-act.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Digital Battleground to Protect Your Data</h2>
+    <p>Aug 11, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-digital-battleground-to-protect-your-data/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-digital-battleground-to-protect-your-data.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Musk’s Hidden Easter Egg in Terafab</h2>
+    <p>Aug 7, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/musks-hidden-easter-egg-in-terafab/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/musks-hidden-easter-egg-in-terafab.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>A Cure for Aging?</h2>
+    <p>Aug 6, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/a-cure-for-aging/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/a-cure-for-aging.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Brownstone Research Smartphone App Is Live</h2>
+    <p>Aug 5, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-brownstone-research-smartphone-app-is-live-tbe/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-brownstone-research-smartphone-app-is-live-tbe.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Blockchain Technology Is Revolutionary</h2>
+    <p>Aug 5, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/blockchain-technology-is-revolutionary/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/blockchain-technology-is-revolutionary.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Situationally Unaware</h2>
+    <p>Aug 4, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/situationally-unaware/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/situationally-unaware.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>One of the Most Consequential Monetary Shifts of Our Lifetime</h2>
+    <p>Aug 4, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/one-of-the-most-consequential-monetary-shifts-of-our-lifetime/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/one-of-the-most-consequential-monetary-shifts-of-our-lifetime.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Big Tech’s AI Bet Is Starting to Pay Off</h2>
+    <p>Aug 3, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/big-techs-ai-bet-is-starting-to-pay-off/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/big-techs-ai-bet-is-starting-to-pay-off.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Anthropic’s Push for Regulatory Capture</h2>
+    <p>Jul 31, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/anthropics-push-for-regulatory-capture/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/anthropics-push-for-regulatory-capture.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Push for Open-Weight AI</h2>
+    <p>Jul 31, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-push-for-open-weight-ai/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-push-for-open-weight-ai.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Will Robots Lead to the End of the American Dream?</h2>
+    <p>Jul 30, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/will-robots-lead-to-the-end-of-the-american-dream/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/will-robots-lead-to-the-end-of-the-american-dream.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>The Eleventh-Hour Push for CLARITY</h2>
+    <p>Jul 29, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/the-eleventh-hour-push-for-clarity/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/the-eleventh-hour-push-for-clarity.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Electrical Steel</h2>
+    <p>Jul 27, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/electrical-steel/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/electrical-steel.mp3"></audio>
+</article><article class="card">
+  <div class="meta">
+    <h2>Starship’s 13th Test Launch</h2>
+    <p>Jul 23, 2026</p>
+    <a class="src" href="https://www.brownstoneresearch.com/bleeding-edge/starships-13th-test-launch/" target="_blank" rel="noopener">Source ↗</a>
+  </div>
+  <audio controls preload="none" src="audio/starships-13th-test-launch.mp3"></audio>
+</article>
     </section>
-    
     <footer>Auto-generated from the Brownstone monitor workflow.</footer>
-  </div>
-  
-  <!-- Session Strip: Live Brief -->
-  <div class="session-strip" id="sessionStrip" role="complementary" aria-label="Live session">
-    <div class="session-strip-inner">
-      <div class="session-badge">
-        <div class="session-pulse"></div>
-        <span>LIVE BRIEF</span>
-      </div>
-      <div class="session-time" id="sessionTime"></div>
-      <div class="session-title" id="sessionTitle"></div>
-    </div>
-  </div>
-
-  <script>
-    (async () => {
-      // Handle authentication token from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const hashParams = new URLSearchParams(window.location.hash.slice(1));
-      const tokenFromUrl = urlParams.get('key') || hashParams.get('key');
-      
-      if (tokenFromUrl) {
-        localStorage.setItem('listenToken', tokenFromUrl);
-        const cleanUrl = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, document.title, cleanUrl);
-      }
-
-      const token = localStorage.getItem('listenToken');
-      const heardLocal = JSON.parse(localStorage.getItem('heardLocal') || '{}');
-
-      // Fetch data
-      const [articlesRes, listensRes] = await Promise.all([
-        fetch('articles.json'),
-        fetch('listens.json').catch(() => ({ json: async () => ({}) }))
-      ]);
-      
-      const articles = await articlesRes.json();
-      const listens = await listensRes.json();
-      
-      const now = Date.now();
-      const listEl = document.getElementById('articleList');
-      const searchInput = document.getElementById('searchInput');
-      const heroCount = document.getElementById('heroCount');
-      const sessionStrip = document.getElementById('sessionStrip');
-      const sessionTime = document.getElementById('sessionTime');
-      const sessionTitle = document.getElementById('sessionTitle');
-      
-      let sessionStartTime = null;
-      
-      // Update hero count
-      const validArticles = articles.filter(article => {
-        const listen = listens[article.slug];
-        const deleteAfter = listen?.delete_after;
-        return !deleteAfter || new Date(deleteAfter) >= now;
-      });
-      
-      heroCount.textContent = `${validArticles.length} tracks available`;
-      
-      // Clear loading state
-      listEl.innerHTML = '';
-      listEl.setAttribute('aria-busy', 'false');
-      
-      if (validArticles.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.innerHTML = '<div class="empty-state-icon">●</div><p>No tracks available</p>';
-        listEl.appendChild(empty);
-        return;
-      }
-      
-      // Track currently playing audio
-      let currentAudio = null;
-      let currentCard = null;
-      
-      // Render cards
-      for (const article of validArticles) {
-        const listen = listens[article.slug];
-        const heardAt = listen?.heard_at || heardLocal[article.slug];
-        const deleteAfter = listen?.delete_after;
-        
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.dataset.slug = article.slug;
-        card.dataset.title = article.title.toLowerCase();
-        
-        const meta = document.createElement('div');
-        meta.className = 'meta';
-        
-        const date = document.createElement('p');
-        date.className = 'date';
-        date.textContent = article.date.toUpperCase();
-        
-        const title = document.createElement('h2');
-        title.textContent = article.title;
-        
-        meta.appendChild(date);
-        meta.appendChild(title);
-        
-        // Add badge if heard
-        if (heardAt) {
-          const badge = document.createElement('div');
-          badge.className = 'badge';
-          badge.setAttribute('role', 'status');
-          badge.setAttribute('aria-live', 'polite');
-          
-          const badgeText = document.createElement('span');
-          badgeText.textContent = '✓ HEARD (DELETES 3D)';
-          
-          const keepBtn = document.createElement('button');
-          keepBtn.className = 'keep-btn';
-          keepBtn.textContent = 'KEEP';
-          keepBtn.setAttribute('aria-label', `Keep ${article.title}`);
-          
-          keepBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            
-            // Remove from localStorage
-            delete heardLocal[article.slug];
-            localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
-            
-            // Call GitHub API if authenticated
-            if (token) {
-              try {
-                await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/vnd.github+json',
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    event_type: 'listen_keep',
-                    client_payload: { slug: article.slug }
-                  })
-                });
-              } catch (err) {
-                console.error('Keep API error:', err);
-              }
-            }
-            
-            // Remove badge with fade
-            badge.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
-            badge.style.opacity = '0';
-            badge.style.transform = 'scale(0.95)';
-            setTimeout(() => badge.remove(), 200);
-          });
-          
-          badge.appendChild(badgeText);
-          badge.appendChild(keepBtn);
-          meta.appendChild(badge);
-        }
-        
-        const link = document.createElement('a');
-        link.className = 'source-link';
-        link.href = article.url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = 'SOURCE';
-        link.setAttribute('aria-label', `Read source article: ${article.title}`);
-        
-        // Source flash on open
-        link.addEventListener('click', (e) => {
-          card.style.borderLeftColor = 'var(--signal)';
-          setTimeout(() => {
-            if (card !== currentCard) {
-              card.style.borderLeftColor = 'transparent';
-            }
-          }, 400);
-        });
-        
-        meta.appendChild(link);
-        
-        const playerWrap = document.createElement('div');
-        playerWrap.className = 'player-wrap';
-        
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.preload = 'metadata';
-        audio.src = article.audio;
-        audio.setAttribute('aria-label', `Audio narration of ${article.title}`);
-        
-        const durationHint = document.createElement('div');
-        durationHint.className = 'duration-hint';
-        durationHint.textContent = '...';
-        
-        // Update duration hint when metadata loads
-        audio.addEventListener('loadedmetadata', () => {
-          const duration = Math.floor(audio.duration);
-          const minutes = Math.floor(duration / 60);
-          const seconds = duration % 60;
-          durationHint.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        });
-        
-        audio.addEventListener('error', () => {
-          durationHint.textContent = 'n/a';
-        });
-        
-        // Session Strip: First play activates, shows current track
-        audio.addEventListener('play', () => {
-          if (currentAudio && currentAudio !== audio) {
-            currentAudio.pause();
-            if (currentCard) {
-              currentCard.classList.remove('active-track');
-            }
-          }
-          currentAudio = audio;
-          currentCard = card;
-          
-          // Active track accent rail
-          card.classList.add('active-track');
-          
-          // Start session on first play
-          if (!sessionStartTime) {
-            sessionStartTime = Date.now();
-            sessionStrip.classList.add('active');
-            
-            // Update time every second
-            const updateTime = () => {
-              if (!sessionStartTime) return;
-              const now = new Date();
-              const hours = now.getHours().toString().padStart(2, '0');
-              const minutes = now.getMinutes().toString().padStart(2, '0');
-              sessionTime.textContent = `${hours}:${minutes}`;
-              setTimeout(updateTime, 1000);
-            };
-            updateTime();
-          }
-          
-          sessionTitle.textContent = article.title;
-        });
-        
-        audio.addEventListener('pause', () => {
-          if (currentAudio === audio && !audio.ended) {
-            card.classList.remove('active-track');
-          }
-        });
-        
-        audio.addEventListener('ended', () => {
-          // Dim finished title
-          title.classList.add('heard');
-          card.classList.remove('active-track');
-        });
-        
-        // Track completion
-        let completed = false;
-        const markComplete = async () => {
-          if (completed) return;
-          completed = true;
-          
-          // Store in localStorage
-          heardLocal[article.slug] = new Date().toISOString();
-          localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
-          
-          // Add badge immediately
-          const existingBadge = meta.querySelector('.badge');
-          if (existingBadge) return;
-          
-          const badge = document.createElement('div');
-          badge.className = 'badge';
-          badge.setAttribute('role', 'status');
-          badge.setAttribute('aria-live', 'polite');
-          
-          const badgeText = document.createElement('span');
-          badgeText.textContent = '✓ HEARD (DELETES 3D)';
-          
-          const keepBtn = document.createElement('button');
-          keepBtn.className = 'keep-btn';
-          keepBtn.textContent = 'KEEP';
-          keepBtn.setAttribute('aria-label', `Keep ${article.title}`);
-          
-          keepBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            delete heardLocal[article.slug];
-            localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
-            
-            if (token) {
-              try {
-                await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/vnd.github+json',
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    event_type: 'listen_keep',
-                    client_payload: { slug: article.slug }
-                  })
-                });
-              } catch (err) {
-                console.error('Keep API error:', err);
-              }
-            }
-            
-            badge.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
-            badge.style.opacity = '0';
-            badge.style.transform = 'scale(0.95)';
-            setTimeout(() => badge.remove(), 200);
-          });
-          
-          badge.appendChild(badgeText);
-          badge.appendChild(keepBtn);
-          
-          // Insert before source link
-          meta.insertBefore(badge, link);
-          
-          // Call GitHub API if authenticated
-          if (token) {
-            try {
-              await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
-                method: 'POST',
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Accept': 'application/vnd.github+json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  event_type: 'listen_complete',
-                  client_payload: { 
-                    slug: article.slug,
-                    audio: article.audio 
-                  }
-                })
-              });
-            } catch (err) {
-              console.error('Complete API error:', err);
-            }
-          }
-        };
-        
-        // Ended event
-        audio.addEventListener('ended', markComplete);
-        
-        // 98% fallback on timeupdate
-        audio.addEventListener('timeupdate', () => {
-          if (audio.duration && audio.currentTime / audio.duration >= 0.98) {
-            markComplete();
-          }
-        });
-        
-        playerWrap.appendChild(audio);
-        playerWrap.appendChild(durationHint);
-        
-        card.appendChild(meta);
-        card.appendChild(playerWrap);
-        listEl.appendChild(card);
-      }
-      
-      // Search filter with opacity crossfade
-      let filterTimeout;
-      searchInput.addEventListener('input', (e) => {
-        clearTimeout(filterTimeout);
-        
-        const query = e.target.value.toLowerCase().trim();
-        const cards = listEl.querySelectorAll('.card');
-        
-        // Add filtering class for smooth transitions
-        cards.forEach(card => card.classList.add('filtering'));
-        
-        filterTimeout = setTimeout(() => {
-          let visibleCount = 0;
-          cards.forEach(card => {
-            const title = card.dataset.title || '';
-            const matches = !query || title.includes(query);
-            card.hidden = !matches;
-            if (matches) visibleCount++;
-          });
-          
-          // Show/hide empty state
-          let emptyState = listEl.querySelector('.empty-state');
-          if (visibleCount === 0 && query) {
-            if (!emptyState) {
-              emptyState = document.createElement('div');
-              emptyState.className = 'empty-state';
-              emptyState.innerHTML = '<div class="empty-state-icon">○</div><p>No matches</p>';
-              listEl.appendChild(emptyState);
-            }
-            emptyState.hidden = false;
-          } else if (emptyState) {
-            emptyState.hidden = true;
-          }
-        }, 100);
-      });
-    })();
-  </script>
+  </main>
 </body>
 </html>
