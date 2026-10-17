@@ -17,6 +17,12 @@ jobs:
         run: |
           EVENT_TYPE="${{ github.event.action }}"
           SLUG="${{ github.event.client_payload.slug }}"
+
+          # Ignore permanently removed episodes even if they are accidentally re-added.
+          if jq -e --arg slug "$SLUG" '.[] | select(.slug == $slug)' removed.json > /dev/null; then
+            echo "Blocked slug: $SLUG (listed in removed.json)"
+            exit 0
+          fi
           
           # Validate slug exists in articles.json
           if ! jq -e --arg slug "$SLUG" '.[] | select(.slug == $slug)' articles.json > /dev/null; then
