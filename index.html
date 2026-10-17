@@ -814,57 +814,62 @@
 
           // Add badge immediately
           const existingBadge = meta.querySelector('.badge');
-          if (existingBadge) return;
+          const completionDeleteAfter = deleteAfter ||
+            new Date(heardAt.getTime() + deleteWindowMs).toISOString();
 
-          const badge = document.createElement('div');
-          badge.className = 'badge';
-          badge.setAttribute('role', 'status');
-          badge.setAttribute('aria-live', 'polite');
+          if (existingBadge) {
+            existingBadge.querySelector('span').textContent = deletionLabel(completionDeleteAfter);
+          } else {
+            const badge = document.createElement('div');
+            badge.className = 'badge';
+            badge.setAttribute('role', 'status');
+            badge.setAttribute('aria-live', 'polite');
 
-          const badgeText = document.createElement('span');
-          badgeText.textContent = deletionLabel(new Date(heardAt.getTime() + deleteWindowMs).toISOString());
+            const badgeText = document.createElement('span');
+            badgeText.textContent = deletionLabel(completionDeleteAfter);
 
-          const keepBtn = document.createElement('button');
-          keepBtn.className = 'keep-btn';
-          keepBtn.textContent = 'KEEP';
-          keepBtn.setAttribute('aria-label', `Keep ${article.title}`);
+            const keepBtn = document.createElement('button');
+            keepBtn.className = 'keep-btn';
+            keepBtn.textContent = 'KEEP';
+            keepBtn.setAttribute('aria-label', `Keep ${article.title}`);
 
-          keepBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            delete heardLocal[article.slug];
-            completed = false;
-            localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
+            keepBtn.addEventListener('click', async (e) => {
+              e.stopPropagation();
+              delete heardLocal[article.slug];
+              completed = false;
+              localStorage.setItem('heardLocal', JSON.stringify(heardLocal));
 
-            if (token) {
-              try {
-                await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/vnd.github+json',
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    event_type: 'listen_keep',
-                    client_payload: { slug: article.slug }
-                  })
-                });
-              } catch (err) {
-                console.error('Keep API error:', err);
+              if (token) {
+                try {
+                  await fetch('https://api.github.com/repos/marvelus-tech/brownstone-audio/dispatches', {
+                    method: 'POST',
+                    headers: {
+                      'Authorization': `Bearer ${token}`,
+                      'Accept': 'application/vnd.github+json',
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      event_type: 'listen_keep',
+                      client_payload: { slug: article.slug }
+                    })
+                  });
+                } catch (err) {
+                  console.error('Keep API error:', err);
+                }
               }
-            }
 
-            badge.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
-            badge.style.opacity = '0';
-            badge.style.transform = 'scale(0.95)';
-            setTimeout(() => badge.remove(), 200);
-          });
+              badge.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
+              badge.style.opacity = '0';
+              badge.style.transform = 'scale(0.95)';
+              setTimeout(() => badge.remove(), 200);
+            });
 
-          badge.appendChild(badgeText);
-          badge.appendChild(keepBtn);
+            badge.appendChild(badgeText);
+            badge.appendChild(keepBtn);
 
-          // Insert before source link
-          meta.insertBefore(badge, link);
+            // Insert before source link
+            meta.insertBefore(badge, link);
+          }
 
           // Call GitHub API if authenticated
           if (token) {

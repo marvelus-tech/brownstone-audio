@@ -16,6 +16,7 @@ test('page stays JSON-driven with listened controls', () => {
   assert.match(index, /client_payload: \{\s*slug: article\.slug/);
   assert.match(index, /HEARD/);
   assert.match(index, /keepBtn\.textContent = 'KEEP'/);
+  assert.doesNotMatch(index, /if \(existingBadge\) return/);
   assert.doesNotMatch(index, /<article class="card">/);
 });
 
