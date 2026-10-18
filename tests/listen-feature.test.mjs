@@ -3,10 +3,16 @@ import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const index = readFileSync('index.html', 'utf8');
+const canonicalIndex = readFileSync('template/index.template.html', 'utf8');
 const articles = JSON.parse(readFileSync('articles.json', 'utf8'));
 const listens = JSON.parse(readFileSync('listens.json', 'utf8'));
 const removed = JSON.parse(readFileSync('removed.json', 'utf8'));
 const recordWorkflow = readFileSync('.github/workflows/record-listen.yml', 'utf8');
+const restoreWorkflow = readFileSync('.github/workflows/restore-canonical-index.yml', 'utf8');
+
+test('deployed page matches the canonical template', () => {
+  assert.equal(index, canonicalIndex);
+});
 
 test('page stays JSON-driven with listened controls', () => {
   assert.match(index, /fetch\('articles\.json'\)/);
@@ -26,6 +32,19 @@ test('page dispatch contract matches the record workflow', () => {
   assert.match(recordWorkflow, /types: \[listen_complete, listen_keep\]/);
   assert.match(recordWorkflow, /github\.event\.client_payload\.slug/);
   assert.match(recordWorkflow, /select\(\.slug == \$slug\)' removed\.json/);
+});
+
+test('self-heal workflow restores only the canonical page', () => {
+  assert.match(restoreWorkflow, /branches: \[main\]/);
+  assert.match(restoreWorkflow, /- index\.html/);
+  assert.match(restoreWorkflow, /- articles\.json/);
+  assert.match(restoreWorkflow, /cmp -s template\/index\.template\.html index\.html/);
+  assert.match(restoreWorkflow, /cp template\/index\.template\.html index\.html/);
+  assert.match(restoreWorkflow, /git add index\.html/);
+  assert.match(restoreWorkflow, /pages: write/);
+  assert.match(restoreWorkflow, /gh api --method POST/);
+  assert.match(restoreWorkflow, /pages\/builds/);
+  assert.doesNotMatch(restoreWorkflow, /git add .*articles\.json/);
 });
 
 test('every current article has an audio file', () => {
