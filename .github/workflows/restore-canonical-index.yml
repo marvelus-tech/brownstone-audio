@@ -1,0 +1,55 @@
+name: Restore Canonical Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - articles.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: restore-canonical-index
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore canonical index when needed
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B canonical-index-restore origin/main
+
+            if cmp -s template/index.template.html index.html; then
+              echo "index.html already matches the canonical template"
+              exit 0
+            fi
+
+            cp template/index.template.html index.html
+            git add index.html
+            git commit -m "Restore canonical JSON-driven index page"
+
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            echo "Main changed during restore; retrying (${attempt}/3)"
+          done
+
+          echo "Unable to restore index.html after 3 attempts"
+          exit 1
