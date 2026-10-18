@@ -41,6 +41,9 @@ test('self-heal workflow restores only the canonical page', () => {
   assert.match(restoreWorkflow, /cmp -s template\/index\.template\.html index\.html/);
   assert.match(restoreWorkflow, /cp template\/index\.template\.html index\.html/);
   assert.match(restoreWorkflow, /git add index\.html/);
+  assert.match(restoreWorkflow, /pages: write/);
+  assert.match(restoreWorkflow, /gh api --method POST/);
+  assert.match(restoreWorkflow, /pages\/builds/);
   assert.doesNotMatch(restoreWorkflow, /git add .*articles\.json/);
 });
 
